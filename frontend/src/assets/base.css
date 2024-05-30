@@ -1,8 +1,8 @@
-@tailwind base;
+/* @tailwind base; */
 @tailwind components;
 @tailwind utilities;
 /* Custom styles */
-:root {
+/* :root {
   --primary-50: 236 253 245;
   --primary-100: 209 250 229;
   --primary-200: 167 243 208;
@@ -68,11 +68,14 @@
     --primary-highlight-inverse: var(--surface-0);
     --primary-highlight-hover-opacity: 0.2;
   }
-}
+} */
 body {
-  min-height: calc(100svh - 1rem);
   color: var(--color-text);
   background: var(--color-background);
   font-family: Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   font-size: 15px;
+}
+
+a{
+  color: black;
 }
