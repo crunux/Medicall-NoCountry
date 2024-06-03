@@ -1,16 +1,37 @@
 <script setup lang="ts">
+type Genero = 'M' | 'F' | 'O';
 
+interface Form {
+    name: string;
+    lastName: string;
+    genero: Genero;
+    personalId: string;
+    address: string;
+    email: string;
+    password: string;
+    confirmPassword: string;
+    acceptCondition: boolean;
+
+}
 const active = ref(0);
 
-const registerForm = reactive({
+const registerForm = reactive<Form>({
     name: '',
     lastName: '',
+    genero: '',
+    personalId: '',
     address: '',
     email: '',
     password: '',
     confirmPassword: '',
     acceptCondition: false,
 });
+
+const generos = ref([
+    { name: 'Masculino', code: 'M' },
+    { name: 'Femenino', code: 'F' },
+    { name: 'Otros', code: 'O' }
+]);
 const register = () => {
     console.log('register');
 }
@@ -51,6 +72,25 @@ const register = () => {
                             </div>
                             <div class="flex flex-col">
                                 <label class=" m-1 text-gray-1"
+                                    for="genero">Genero</label>
+                                <Dropdown id="genero"
+                                    v-model="registerForm.genero"
+                                    :options="generos"
+                                    optionLabel="name"
+                                    optionValue="code"
+                                    type="genero"
+                                    autofocus />
+                            </div>
+                            <div class="flex flex-col">
+                                <label class=" m-1 text-gray-1"
+                                    for="personalId">Personar ID</label>
+                                <InputText id="personalId"
+                                    v-model="registerForm.personalId"
+                                    type="personalId"
+                                    autofocus />
+                            </div>
+                            <div class="flex flex-col">
+                                <label class=" m-1 text-gray-1"
                                     for="email">Email</label>
                                 <InputText id="email"
                                     v-model="registerForm.email"
@@ -76,7 +116,7 @@ const register = () => {
                                     autofocus />
                             </div>
                             <div>
-                                <div class="flex gap-2 m-2 items-center">
+                                <div class="flex gap-2 m-2 mt-4 items-center">
                                     <Checkbox id="accept"
                                         v-model="registerForm.acceptCondition"
                                         name="accept"
@@ -84,7 +124,7 @@ const register = () => {
                                     <label class="text-gray-1 text-sm"
                                         for="accept">I agree to the <a href="">terms and conditions.</a></label>
                                 </div>
-                                <div class="flex justify-end">
+                                <div class="flex justify-end mt-2">
                                     <Button @click="nextCallback"
                                         label="Siguiente"
                                         class="m-2" />
@@ -122,6 +162,7 @@ const register = () => {
                             <div>
                                 <div class="flex justify-between">
                                     <Button @click="prevCallback"
+                                        severity="secondary"
                                         label="Anterior"
                                         class="m-2" />
                                     <Button type="submit"

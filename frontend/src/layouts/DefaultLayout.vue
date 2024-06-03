@@ -28,7 +28,7 @@ console.log(menuProfile);
 </script>
 <template>
     <navbar class=" w-[calc(100vw - 0.5rem)] h-20 flex justify-between items-center ">
-        <div class="flex justify-start items-center gap-4 font-regular ml-10">
+        <div class="flex justify-start items-center gap-4 font-semibold font-regular ml-10">
             <RouterLink class="text-lg no-underline"
                 to="/">Home</RouterLink>
             <RouterLink class="text-lg no-underline"
