@@ -85,12 +85,12 @@ const responsiveOptions = ref([
         <div class="md:w-4/12 mt-6 h-full flex flex-col items-center">
             <h1 class="text-3xl md:text-6xl mb-4 text-center">Consulta con tu medico preferido nunca fue tan facil.</h1>
             <p class="text-lg md:text-xl m-0 text-center text-gray-1">Desde cualquier parte.</p>
-            <Button class="my-2 shadow-md px-4 py-3">Consulta Ahora.!</Button>
+            <Button class="my-4 shadow-md px-4 py-3">Consulta Ahora.!</Button>
         </div>
     </SectionLanding>
     <SectionLanding>
         <div class="md:w-7/12 mt-6 flex flex-col items-center">
-            <h2 class="text-3xl md:text-4xl mb-4 text-center">Servicios/Especialidades</h2>
+            <h2 class="text-3xl md:text-4xl my-y text-center">Servicios/Especialidades</h2>
             <Carousel :value="data"
                 :numVisible="6"
                 :responsiveOptions>
@@ -104,7 +104,7 @@ const responsiveOptions = ref([
                     </div>
                 </template>
             </Carousel>
-            <Button class="my-2 shadow-md px-4 py-3">Haz tu cita!</Button>
+            <Button class="my-6 shadow-md px-4 py-3">Haz tu cita!</Button>
         </div>
     </SectionLanding>
     <SectionLanding>
@@ -132,3 +132,8 @@ const responsiveOptions = ref([
         </div>
     </footer>
 </template>
+<style scope>
+.p-carousel-indicators {
+    display: none;
+}
+</style>
