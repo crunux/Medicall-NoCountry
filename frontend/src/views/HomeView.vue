@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import Avatar from 'primevue/avatar';
+import { onUpdated } from 'vue';
 
 const data = reactive([
     {
@@ -78,18 +79,22 @@ const responsiveOptions = ref([
         numScroll: 1
     }
 ]);
+onUpdated(() => {
+    window.scrollTo(0, 0);
+})
 </script>
 
 <template>
     <SectionLanding>
-        <div class="md:w-4/12 mt-6 h-full flex flex-col items-center">
-            <h1 class="text-3xl md:text-6xl mb-4 text-center">Consulta con tu medico preferido nunca fue tan facil.</h1>
+        <div class="md:w-6/12 h-full flex flex-col justify-center items-center">
+            <h1 class="text-3xl lg:text-6xl m-4 text-center">Consulta con tu medico preferido nunca fue tan facil.</h1>
             <p class="text-lg md:text-xl m-0 text-center text-gray-1">Desde cualquier parte.</p>
             <Button class="my-4 shadow-md px-4 py-3">Consulta Ahora.!</Button>
         </div>
     </SectionLanding>
     <SectionLanding>
-        <div class="md:w-7/12 mt-6 flex flex-col items-center">
+        <div v-animateonscroll="{ enterClass: 'fadeinleft', leaveClass: 'fadeoutleft' }"
+            class="md:w-7/12 flex flex-col items-center animation-duration-1000 animation-ease-in-out">
             <h2 class="text-3xl md:text-4xl my-y text-center">Servicios/Especialidades</h2>
             <Carousel :value="data"
                 :numVisible="6"
@@ -108,7 +113,7 @@ const responsiveOptions = ref([
         </div>
     </SectionLanding>
     <SectionLanding>
-        <div class="md:w-4/12 mt-6">
+        <div class="md:w-4/12">
             <h2 class="text-3xl md:text-4xl mb-4 text-center">Nuestros Medicos.</h2>
             <p class="text-lg md:text-xl m-0 text-center text-gray-1">Desde cualquier parte.</p>
             <Button class="mx-[28%] md:mx-[38%] my-2 shadow-md px-4 py-3">Consulta Ahora.!</Button>

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+
 type Genero = 'M' | 'F' | 'O';
 
 interface Form {
@@ -11,9 +12,19 @@ interface Form {
     password: string;
     confirmPassword: string;
     acceptCondition: boolean;
+    bornDate: string;
+    height: string;
+    weight: string;
+    deasea: string;
+    personalHistory: string;
+    familyHistory: string;
 
 }
 const active = ref(0);
+const haveDeasea = ref(false);
+const havePersonalHistory = ref(false);
+const haveFamilyHistory = ref(false);
+const maxDate = ref(new Date());
 
 const registerForm = reactive<Form>({
     name: '',
@@ -25,7 +36,11 @@ const registerForm = reactive<Form>({
     password: '',
     confirmPassword: '',
     acceptCondition: false,
+    deasea: "",
+    personalHistory: "",
+    familyHistory: "",
 });
+
 
 const generos = ref([
     { name: 'Masculino', code: 'M' },
@@ -143,21 +158,80 @@ const register = () => {
                             </button>
                         </template>
                         <template #content="{ prevCallback }">
-                            <div class="mt-3 p-2 flex flex-col">
+                            <div class="flex flex-col">
                                 <label class=" m-1 text-gray-1"
-                                    for="name">Name</label>
-                                <InputText id="name"
-                                    v-model="registerForm.name"
-                                    type="name"
-                                    autofocus />
+                                    for="bornDate">Fecha de Nacimiento</label>
+                                <Calendar id="bornDate"
+                                    v-model="registerForm.bornDate"
+                                    type="bornDate"
+                                    showIcon
+                                    iconDisplay="input"
+                                    :maxDate="maxDate" />
                             </div>
-                            <div class="mt-3 p-2 flex flex-col">
+                            <div class="flex flex-col">
                                 <label class=" m-1 text-gray-1"
-                                    for="email">Email</label>
-                                <InputText id="email"
-                                    v-model="registerForm.email"
-                                    type="email"
-                                    autofocus />
+                                    for="height">Estatura (m)</label>
+                                <InputNumber v-model="registerForm.height"
+                                    inputId="height"
+                                    :minFractionDigits="1"
+                                    suffix=" m" />
+                            </div>
+                            <div class="flex flex-col">
+                                <label class=" m-1 text-gray-1"
+                                    for="weight">Peso (kg)</label>
+                                <InputNumber v-model="registerForm.weight"
+                                    inputId="weight"
+                                    :minFractionDigits="1"
+                                    suffix=" kg" />
+                            </div>
+
+                            <div class="flex flex-col">
+                                <div class="flex justify-start items-center">
+                                    <Checkbox inputId="haveDeasea"
+                                        v-model="haveDeasea"
+                                        :binary="true"
+                                        value="haveDeasea"
+                                        name="haveDeasea" />
+                                    <label class=" m-1 text-gray-1"
+                                        for="haveDeasea">Sufre de alguna alergia?</label>
+                                </div>
+                                <Textarea v-show="haveDeasea"
+                                    v-model="registerForm.deasea"
+                                    rows="5"
+                                    placeholder="Especifique la alergia o alergias."
+                                    cols="30" />
+                            </div>
+                            <div class="flex flex-col">
+                                <div class="flex justify-start items-center">
+                                    <Checkbox inputId="personalHistory"
+                                        v-model="havePersonalHistory"
+                                        :binary="true"
+                                        value="personalHistory"
+                                        name="personalHistory" />
+                                    <label class=" m-1 text-gray-1"
+                                        for="personalHistory">Tiene antecedentes personales?</label>
+                                </div>
+                                <Textarea v-show="havePersonalHistory"
+                                    v-model="registerForm.personalHistory"
+                                    rows="5"
+                                    placeholder="Enfermedades que padece."
+                                    cols="30" />
+                            </div>
+                            <div class="flex flex-col">
+                                <div class="flex justify-start items-center">
+                                    <Checkbox inputId="familyHistory"
+                                        v-model="haveFamilyHistory"
+                                        :binary="true"
+                                        value="familyHistory"
+                                        name="familyHistory" />
+                                    <label class=" m-1 text-gray-1"
+                                        for="familyHistory">Tiene antecedente personales?</label>
+                                </div>
+                                <Textarea v-show="haveFamilyHistory"
+                                    v-model="registerForm.familyHistory"
+                                    rows="5"
+                                    placeholder="Enfermedades heridataria o que padece algun familiar que sea relevante."
+                                    cols="30" />
                             </div>
                             <div>
                                 <div class="flex justify-between">
@@ -177,4 +251,5 @@ const register = () => {
         </div>
     </div>
 </template>
-<style scoped></style>
+para la información medica del paciente se debe agregar fecha de nacimiento, estatura, peso, antecedentes familiares,
+sufre de alguna enfermedad (si/no), antecedentes personales

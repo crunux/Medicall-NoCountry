@@ -12,10 +12,12 @@ declare module 'vue' {
     AuthLayout: typeof import('./src/layouts/AuthLayout.vue')['default']
     Avatar: typeof import('primevue/avatar')['default']
     Button: typeof import('primevue/button')['default']
+    Calendar: typeof import('primevue/calendar')['default']
     Carousel: typeof import('primevue/carousel')['default']
     Checkbox: typeof import('primevue/checkbox')['default']
     DefaultLayout: typeof import('./src/layouts/DefaultLayout.vue')['default']
     Dropdown: typeof import('primevue/dropdown')['default']
+    InputNumber: typeof import('primevue/inputnumber')['default']
     InputText: typeof import('primevue/inputtext')['default']
     LoginForm: typeof import('./src/modules/auth/components/LoginForm.vue')['default']
     LoginView: typeof import('./src/modules/auth/views/LoginView.vue')['default']
@@ -36,6 +38,7 @@ declare module 'vue' {
     TabMenu: typeof import('primevue/tabmenu')['default']
     TabPanel: typeof import('primevue/tabpanel')['default']
     TabView: typeof import('primevue/tabview')['default']
+    Textarea: typeof import('primevue/textarea')['default']
     VideoCallView: typeof import('./src/modules/videocall/views/VideoCallView.vue')['default']
   }
 }
