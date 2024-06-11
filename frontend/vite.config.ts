@@ -16,7 +16,7 @@ export default defineConfig({
         PrimeVueResolver()
       ],
       deep: true,
-      dirs: ['src/components', 'node_modules/primevue/src/components', 'src/modules', 'node_modules/primeicons', 'src/layouts'],
+      dirs: ['src/components', 'node_modules/primevue/src/components', 'src/modules', 'node_modules/primeicons', 'src/layouts', 'node_modules/vee-validate', 'node_modules/@vueuse/core', 'node_modules/@vueuse/head'],
       dts: true,
       types: [{
         from: 'vue-router',
@@ -37,6 +37,7 @@ export default defineConfig({
         'vue',
         'vue-router',
         '@vueuse/core',
+        'vee-validate',
         {
           from: 'vue-router',
           imports: ['RouteLocationRaw'],
