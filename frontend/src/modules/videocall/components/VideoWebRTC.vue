@@ -128,7 +128,7 @@ export default defineComponent({
                 async function connectToPeer(peerID) {
                     if (peerID == that.socket.id) return;
                     try {
-                        that.log('Connecting to peer');
+                        that.log('Connecting to peer', that.roomId);
                         const { peer } = await that.signalClient.connect(peerID, that.roomId, that.peerOptions);
                         console.log(that.videoList, 'videolist');
                         that.videoList.forEach(v => {
