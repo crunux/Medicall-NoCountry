@@ -93,17 +93,34 @@ export default defineComponent({
         async join() {
             var that = this;
             this.log('join');
+            const {
+                videoInputs: cameras,
+                audioInputs: microphones,
+            } = useDevicesList({
+                requestPermissions: true,
+            })
+
+            const currentCamera = computed(() => cameras.value[0]?.deviceId)
+            const currentMicrophone = computed(() => microphones.value[0]?.deviceId)
+
             this.state = 'connected'
             this.socket = io(this.socketURL, this.ioOptions);
             this.signalClient = new SimpleSignalClient(this.socket);
-            let constraints = {
-                video: that.enableVideo,
-                audio: that.enableAudio
-            };
-            if (that.deviceId && that.enableVideo) {
-                constraints.video = { deviceId: { exact: that.deviceId } };
-            }
-            const localStream = await navigator.mediaDevices.getUserMedia(constraints);
+            // let constraints = {
+            //     video: that.enableVideo,
+            //     audio: that.enableAudio
+            // };
+            // if (that.deviceId && that.enableVideo) {
+            //     constraints.video = { deviceId: { exact: that.deviceId } };
+            // }
+
+            const { stream: localStream } = useUserMedia({
+                constraints: {
+                    video: { deviceId: currentCamera },
+                    audio: { deviceId: currentMicrophone, }
+                }
+            })
+            // const localStream = await navigator.mediaDevices.getUserMedia(constraints);
             this.log('opened', localStream);
             this.joinedRoom(localStream, true);
             this.signalClient.once('discover', (discoveryData) => {
