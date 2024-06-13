@@ -35,10 +35,7 @@ declare module 'vue' {
     Stepper: typeof import('primevue/stepper')['default']
     StepperPanel: typeof import('primevue/stepperpanel')['default']
     Textarea: typeof import('primevue/textarea')['default']
-    VideoCall: typeof import('./src/modules/videocall/composables/VideoCall.vue')['default']
     VideoCallView: typeof import('./src/modules/videocall/views/VideoCallView.vue')['default']
     VideoWebRTC: typeof import('./src/modules/videocall/components/VideoWebRTC.vue')['default']
-    VueWebrtc: typeof import('./node_modules/vue-webrtc/src/lib-components/vue-webrtc.vue')['default']
-    VueWebrtcSample: typeof import('./node_modules/vue-webrtc/src/lib-components/vue-webrtc-sample.vue')['default']
   }
 }

@@ -113,7 +113,9 @@ export default defineComponent({
                     try {
                         that.log('Connecting to peer');
                         const { peer } = await that.signalClient.connect(peerID, that.roomId, that.peerOptions);
+                        console.log(that.videoList, 'videolist');
                         that.videoList.forEach(v => {
+                            console.log(v, 'itemvideolist');
                             if (v.isLocal) {
                                 that.onPeer(peer, v.stream);
                             }

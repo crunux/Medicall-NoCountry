@@ -19,7 +19,7 @@ const leave = () => {
     label="Room ID"
     v-model="roomId" />
   <VideoWebRTC ref="webrtc"
-    socketURL="https://videocall-socket-pi.vercel.app"
+    socketURL="https://143.198.128.118:3000/"
     cameraHeight="500"
     :roomId="roomId"
     :enableLogs="true" />
