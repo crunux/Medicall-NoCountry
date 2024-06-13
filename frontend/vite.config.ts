@@ -1,6 +1,7 @@
 import { fileURLToPath, URL } from 'node:url'
 
 import { defineConfig } from 'vite'
+import { nodePolyfills } from 'vite-plugin-node-polyfills'
 import vue from '@vitejs/plugin-vue'
 import Components from 'unplugin-vue-components/vite';
 import AutoImport from 'unplugin-auto-import/vite'
@@ -16,7 +17,7 @@ export default defineConfig({
         PrimeVueResolver()
       ],
       deep: true,
-      dirs: ['src/components', 'node_modules/primevue/src/components', 'src/modules', 'node_modules/primeicons', 'src/layouts', 'node_modules/vee-validate', 'node_modules/@vueuse/core', 'node_modules/@vueuse/head'],
+      dirs: ['src/components', 'node_modules/primevue/src/components', 'src/modules', 'node_modules/primeicons', 'src/layouts', 'node_modules/vee-validate', 'node_modules/@vueuse/core'],
       dts: true,
       types: [{
         from: 'vue-router',
@@ -50,6 +51,7 @@ export default defineConfig({
       },
     }),
     VueDevTools(),
+    nodePolyfills(),
   ],
   resolve: {
     alias: {

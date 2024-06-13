@@ -27,7 +27,6 @@ declare module 'vue' {
     MenuProfile: typeof import('./src/components/MenuProfile.vue')['default']
     PacientesForm: typeof import('./src/modules/auth/components/PacientesForm.vue')['default']
     Password: typeof import('primevue/password')['default']
-    RegisterForm: typeof import('./src/modules/auth/components/RegisterForm.vue')['default']
     RegisterView: typeof import('./src/modules/auth/views/RegisterView.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
@@ -35,10 +34,11 @@ declare module 'vue' {
     SelectButton: typeof import('primevue/selectbutton')['default']
     Stepper: typeof import('primevue/stepper')['default']
     StepperPanel: typeof import('primevue/stepperpanel')['default']
-    TabMenu: typeof import('primevue/tabmenu')['default']
-    TabPanel: typeof import('primevue/tabpanel')['default']
-    TabView: typeof import('primevue/tabview')['default']
     Textarea: typeof import('primevue/textarea')['default']
+    VideoCall: typeof import('./src/modules/videocall/composables/VideoCall.vue')['default']
     VideoCallView: typeof import('./src/modules/videocall/views/VideoCallView.vue')['default']
+    VideoWebRTC: typeof import('./src/modules/videocall/components/VideoWebRTC.vue')['default']
+    VueWebrtc: typeof import('./node_modules/vue-webrtc/src/lib-components/vue-webrtc.vue')['default']
+    VueWebrtcSample: typeof import('./node_modules/vue-webrtc/src/lib-components/vue-webrtc-sample.vue')['default']
   }
 }

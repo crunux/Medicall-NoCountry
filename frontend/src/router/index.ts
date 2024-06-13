@@ -28,6 +28,11 @@ const router = createRouter({
       name: 'register',
       component: () => import('../../src/modules/auth/views/RegisterView.vue')
     },
+    {
+      path: '/videocall',
+      name: 'videocall',
+      component: () => import('../../src/modules/videocall/views/VideoCallView.vue')
+    }
   ]
 })
 
