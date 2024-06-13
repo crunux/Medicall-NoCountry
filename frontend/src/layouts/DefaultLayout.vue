@@ -40,8 +40,6 @@ console.log(menuProfile);
         </div>
         <div class="flex justify-between items-center gap-2 md:px-6 font-medium">
             <div class="flex items-center gap-2">
-                <RouterLink :class="'px-2 bg-gray-0 rounded-md text-xl no-underline'"
-                    to="/videocall">Videocall</RouterLink>
                 <RouterLink
                     :class="!activateRegister ? 'px-2 bg-gray-0 rounded-md text-xl no-underline' : 'text-xl no-underline'"
                     v-if="activateLogin && !userLoggedIn"
