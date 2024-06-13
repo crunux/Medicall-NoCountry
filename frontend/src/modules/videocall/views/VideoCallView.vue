@@ -19,9 +19,9 @@ const leave = () => {
     label="Room ID"
     v-model="roomId" />
   <VideoWebRTC ref="webrtc"
-    socketURL="https://143.198.128.118:3000/"
+    socketURL="https://videocall-socket-pi.vercel.app/"
     cameraHeight="500"
-    :roomId="roomId"
+    :roomId
     :enableLogs="true" />
   <Button label="Join"
     v-if="stateCall === 'disconnect'"
