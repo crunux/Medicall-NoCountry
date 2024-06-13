@@ -43,6 +43,8 @@ console.log(menuProfile);
                 <RouterLink
                     :class="!activateRegister ? 'px-2 bg-gray-0 rounded-md text-xl no-underline' : 'text-xl no-underline'"
                     v-if="activateLogin && !userLoggedIn"
+                    to="/login">Videocall</RouterLink>
+                <RouterLink :class="'px-2 bg-gray-0 rounded-md text-xl no-underline'"
                     to="/login">Login</RouterLink>
                 <RouterLink class="px-3 bg-gray-0 rounded-md text-xl no-underline"
                     v-if="activateRegister && !userLoggedIn"
