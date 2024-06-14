@@ -1,13 +1,49 @@
 <script setup lang="ts">
+import { reactive } from 'vue';
+import { useRouter } from 'vue-router';
+import { useAuthStore } from '@/stores/useAuthStore';
 
 const loginForm = reactive({
     email: '',
     password: '',
-    accept: false
 });
+//useRoute() o useRouter()
+const router = useRouter();
+const auth = useAuthStore();
 
-const login = () => {
+const login = async() => {
     console.log(loginForm);
+    try {
+        const response = await fetch('http://127.0.0.1:8000/api/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                email: loginForm.email,
+                password: loginForm.password,
+            }),
+        });
+
+        if (!response.ok) {
+            throw new Error('Error en la solicitud');
+        }
+
+        const data = await response.json();
+        console.log('Respuesta del servidor:', data);
+
+        // Guardar el token en el almacenamiento local
+        localStorage.setItem('accessToken', data.accesTocke);
+
+        auth.setToken(data.accesTocke);
+        auth.setUser(data.user);
+
+        router.push({ name: 'videocall' });
+        
+    } catch (error) {
+        console.error('Error al iniciar sesión:', error);
+        // Aquí puedes manejar el error, como mostrar un mensaje al usuario
+    }
 }
 </script>
 <template>
