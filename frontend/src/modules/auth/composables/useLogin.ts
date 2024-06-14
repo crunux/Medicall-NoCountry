@@ -1,7 +1,5 @@
-import { useRouter } from "vue-router";
+import router from "@/router";
 import { useAuthStore } from '@/stores/useAuthStore';
-
-const router = useRouter();
 
 let HOST_BACKEND = import.meta.env.VITE_HOST_BACKEND
 const PORT_BACKEND = import.meta.env.VITE_PORT_BACKEND || null

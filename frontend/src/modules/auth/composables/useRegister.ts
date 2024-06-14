@@ -1,7 +1,7 @@
 import { useAuthStore } from "@/stores/useAuthStore"
 import type { GenericObject } from "vee-validate";
-import { useRouter } from "vue-router";
-const router = useRouter();
+import router from "@/router";
+
 let HOST_BACKEND = import.meta.env.VITE_HOST_BACKEND
 const PORT_BACKEND = import.meta.env.VITE_PORT_BACKEND || null
 
