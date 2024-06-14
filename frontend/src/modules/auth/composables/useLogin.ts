@@ -1,5 +1,5 @@
 import { useRouter } from "vue-router";
-import {useAuthStore} from '@/stores/useAuthStore';
+import { useAuthStore } from '@/stores/useAuthStore';
 
 const router = useRouter();
 

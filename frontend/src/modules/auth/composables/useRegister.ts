@@ -1,10 +1,11 @@
 import { useAuthStore } from "@/stores/useAuthStore"
 import type { GenericObject } from "vee-validate";
-
+import { useRouter } from "vue-router";
+const router = useRouter();
 let HOST_BACKEND = import.meta.env.VITE_HOST_BACKEND
 const PORT_BACKEND = import.meta.env.VITE_PORT_BACKEND || null
 
-if (PORT_BACKEND){
+if (PORT_BACKEND) {
     HOST_BACKEND = `${HOST_BACKEND}:${PORT_BACKEND}`
 }
 
@@ -21,32 +22,33 @@ const useRegister = () => {
     const store = useAuthStore()
     const register = async (values: GenericObject, typeUser: number) => {
         try {
-        // Format the bornDate to year-month-day
-        const formattedValues = {
-            ...values,
+            // Format the bornDate to year-month-day
+            const formattedValues = {
+                ...values,
 
-            bornDate: formatDate(values.bornDate),
+                bornDate: formatDate(values.bornDate),
 
-            type_profile: typeUser
-        };
-        console.log(formattedValues);
+                type_profile: typeUser
+            };
+            console.log(formattedValues);
 
-        const response = await fetch(`https://${HOST_BACKEND}/api/register`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(formattedValues),
-        });
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
+            const response = await fetch(`https://${HOST_BACKEND}/api/register`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formattedValues),
+            });
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const data = await response.json();
+            store.setToken(data.access_token);
+            console.log('Success:', data);
+            router.push({ name: 'videocall' });
+        } catch (error) {
+            console.error('Error:', error);
         }
-        const data = await response.json();
-        store.setToken(data.accesTocke);
-        console.log('Success:', data);
-    } catch (error) {
-        console.error('Error:', error);
-    }
     }
     return {
         register
