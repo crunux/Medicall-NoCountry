@@ -5,6 +5,7 @@ import type { Genero } from '..types'
 
 const active = ref(0);
 const maxDate = ref(new Date());
+const passwordsMatch = ref(true);
 const generos = ref([
     { name: 'Masculino', code: 'M' },
     { name: 'Femenino', code: 'F' },
@@ -54,6 +55,10 @@ const [specialties, specialtiesAttrs] = defineField('specialties');
 const [consultationPrice, consultationPriceAttrs] = defineField('consultationPrice');
 const [professionalRegister, professionalRegisterAttrs] = defineField('professionalRegister');
 const [preRequirements, preRequirementsAttrs] = defineField('preRequirements');
+
+watch([password, confirmPassword], ([newPassword, newConfirmPassword]) => {
+    passwordsMatch.value = newPassword === newConfirmPassword;
+});
 
 const register = handleSubmit(async (values) => {
     console.log('register', values);
@@ -194,10 +199,10 @@ const register = handleSubmit(async (values) => {
                                     v-model="confirmPassword"
                                     v-bind="confirmPasswordAttrs"
                                     type="password"
-                                    :class="{ 'p-invalid': errors.confirmPassword }"
+                                    :class="{ 'p-invalid': errors.confirmPassword || !passwordsMatch }"
                                     aria-describedby="confirm-password-help"
                                     autofocus />
-                                <small v-if="errors.confirmPassword"
+                                <small v-if="errors.confirmPassword || !passwordsMatch"
                                     id="confirmPassword-help"
                                     class="p-error">
                                     {{ errors.confirmPassword }}
@@ -350,7 +355,9 @@ const register = handleSubmit(async (values) => {
                                         label="Anterior"
                                         class="m-2"
                                         aria-describedby="previous-help" />
-                                    <Button type="submit"
+                                    <Button 
+                                    :disabled="!passwordsMatch"
+                                    type="submit"
                                         label="Registrarse"
                                         class="m-2"
                                         aria-describedby="register-help" />
