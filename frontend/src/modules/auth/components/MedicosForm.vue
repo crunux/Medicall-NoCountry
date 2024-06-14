@@ -3,6 +3,9 @@ import { useForm } from 'vee-validate';
 import * as y from 'yup';
 import type { Genero } from '..types'
 
+import useRegister from '../composables/useRegister';
+const { register } = useRegister()
+
 const active = ref(0);
 const maxDate = ref(new Date());
 const passwordsMatch = ref(true);
@@ -60,8 +63,8 @@ watch([password, confirmPassword], ([newPassword, newConfirmPassword]) => {
     passwordsMatch.value = newPassword === newConfirmPassword;
 });
 
-const register = handleSubmit(async (values) => {
-    console.log('register', values);
+const registerUser = handleSubmit(async (values) => {
+    await register(values, 2)
 })
 </script>
 <template>
@@ -69,7 +72,7 @@ const register = handleSubmit(async (values) => {
         <div v-focustrap
             class="w-full card p-4 bg-white rounded-lg shadow-lg border-2 border-gray-1"
             style="max-width: 375px">
-            <form @submit.prevent="register">
+            <form @submit.prevent="registerUser">
                 <Stepper v-model:activeStep="active">
                     <StepperPanel>
                         <template #header="{ index, clickCallback }">
@@ -355,9 +358,8 @@ const register = handleSubmit(async (values) => {
                                         label="Anterior"
                                         class="m-2"
                                         aria-describedby="previous-help" />
-                                    <Button 
-                                    :disabled="!passwordsMatch"
-                                    type="submit"
+                                    <Button :disabled="!passwordsMatch"
+                                        type="submit"
                                         label="Registrarse"
                                         class="m-2"
                                         aria-describedby="register-help" />
