@@ -34,4 +34,3 @@ const leave = () => {
     @click="leave"
     class="m-2" />
 </template>
-<style scoped></style>
