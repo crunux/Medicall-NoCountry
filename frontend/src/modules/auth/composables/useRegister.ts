@@ -31,7 +31,7 @@ const useRegister = () => {
         };
         console.log(formattedValues);
 
-        const response = await fetch(`http://${HOST_BACKEND}/api/register`, {
+        const response = await fetch(`https://${HOST_BACKEND}/api/register`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

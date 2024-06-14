@@ -14,7 +14,7 @@ const useLogin = () => {
     const store = useAuthStore()
     const login = async (values: any) => {
         try {
-            const response = await fetch(`http://${HOST_BACKEND}/api/login`, {
+            const response = await fetch(`https://${HOST_BACKEND}/api/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
