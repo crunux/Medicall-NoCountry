@@ -1,8 +1,10 @@
 <script setup lang="ts">
-
 import { useForm } from 'vee-validate';
 import * as y from 'yup';
 import type { Genero } from '../types';
+import useRegister from '../composables/useRegister';
+
+const { register } = useRegister()
 
 const active = ref(0);
 const haveAllergy = ref(false);
@@ -63,43 +65,11 @@ const generos = ref([
     { name: 'Otros', code: 'O' }
 ]);
 
-// Function to format date
-const formatDate = (date: string) => {
-    const d = new Date(date);
-    const year = d.getFullYear();
-    const month = String(d.getMonth() + 1).padStart(2, '0');
-    const day = String(d.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
-};
 
-const register = handleSubmit(async (values) => {
+
+const registerUser = handleSubmit(async (values) => {
     //console.log(values.bornDate);
-    try {
-        // Format the bornDate to year-month-day
-        const formattedValues = {
-            ...values,
-
-            bornDate: formatDate(values.bornDate),
-
-            type_profile: 1
-        };
-        console.log(formattedValues);
-
-        const response = await fetch('http://127.0.0.1:8000/api/register', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(formattedValues),
-        });
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        const data = await response.json();
-        console.log('Success:', data);
-    } catch (error) {
-        console.error('Error:', error);
-    }
+    await register(values, 1)
 });
 
 // Watch for password and confirmPassword changes
@@ -112,7 +82,7 @@ watch([password, confirmPassword], ([newPassword, newConfirmPassword]) => {
         <div v-focustrap
             class="w-full card p-4 bg-white rounded-lg shadow-lg border-2 border-gray-1"
             style="max-width: 375px">
-            <form @submit.prevent="register">
+            <form @submit.prevent="registerUser">
                 <Stepper v-model:activeStep="active">
                     <StepperPanel>
                         <template #header="{ index, clickCallback }">
@@ -256,8 +226,7 @@ watch([password, confirmPassword], ([newPassword, newConfirmPassword]) => {
                                     id="acceptCondition-help"
                                     class="p-error text-center">{{ errors.acceptCondition }}</small>
                                 <div class="flex justify-end mt-2">
-                                    <Button 
-                                        @click="nextCallback"
+                                    <Button @click="nextCallback"
                                         label="Siguiente"
                                         class="m-2"
                                         aria-describedby="next-help" />
