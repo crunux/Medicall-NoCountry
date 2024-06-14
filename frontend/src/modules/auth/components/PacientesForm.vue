@@ -1,7 +1,8 @@
 <script setup lang="ts">
+import { ref, computed, watch } from 'vue';
 import { useForm } from 'vee-validate';
 import * as y from 'yup';
-import type { Genero } from '..types'
+import type { Genero } from '../types';
 
 interface Form {
     0: {
@@ -30,6 +31,7 @@ const haveAllergy = ref(false);
 const havePersonalHistory = ref(false);
 const haveFamilyHistory = ref(false);
 const maxDate = ref(new Date());
+const passwordsMatch = ref(true);
 
 const validationSchema = [
     y.object({
@@ -53,9 +55,7 @@ const validationSchema = [
     })
 ];
 
-const currentSchema = computed(() => {
-    return validationSchema[active.value];
-});
+const currentSchema = computed(() => validationSchema[active.value]);
 
 const { handleSubmit, defineField, errors } = useForm({
     validationSchema: currentSchema,
@@ -84,17 +84,54 @@ const generos = ref([
     { name: 'Femenino', code: 'F' },
     { name: 'Otros', code: 'O' }
 ]);
+
+// Function to format date
+const formatDate = (date: string) => {
+    const d = new Date(date);
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+};
+
 const register = handleSubmit(async (values) => {
-    console.log(values);
-    // await register(values);
+    //console.log(values.bornDate);
+    try {
+        // Format the bornDate to year-month-day
+        const formattedValues = {
+            ...values,
+            
+            bornDate: formatDate(values.bornDate),
+            
+            type_profile: 1
+        };
+        console.log(formattedValues);
+        
+        const response = await fetch('http://127.0.0.1:8000/api/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formattedValues),
+        });
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        console.log('Success:', data);
+    } catch (error) {
+        console.error('Error:', error);
+    }
 });
 
+// Watch for password and confirmPassword changes
+watch([password, confirmPassword], ([newPassword, newConfirmPassword]) => {
+    passwordsMatch.value = newPassword === newConfirmPassword;
+});
 </script>
 <template>
     <div class="ml-[calc(50% - 187px)] flex items-center justify-center p-4">
-        <div v-focustrap
-            class="w-full card p-4 bg-white rounded-lg shadow-lg border-2 border-gray-1"
-            style="max-width: 375px">
+        <div v-focustrap class="w-full card p-4 bg-white rounded-lg shadow-lg border-2 border-gray-1" style="max-width: 375px">
             <form @submit.prevent="register">
                 <Stepper v-model:activeStep="active">
                     <StepperPanel>
@@ -108,155 +145,58 @@ const register = handleSubmit(async (values) => {
                                     },
                                     text: { style: { color: '#707070', backgroundColor: '#fff' } }
                                 }, showDelay: 1000, hideDelay: 300
-                            }"
-                                class="bg-transparent border-none inline-flex flex-column gap-2"
-                                @click="clickCallback">
-                                <span
-                                    :class="['rounded-md border-2 w-8 h-8 inline-flex items-center justify-center', { ' text-white bg-green-500 border-green-500': index <= active, 'surface-border': index > active }]">
+                            }" class="bg-transparent border-none inline-flex flex-column gap-2" @click="clickCallback">
+                                <span :class="['rounded-md border-2 w-8 h-8 inline-flex items-center justify-center', { ' text-white bg-green-500 border-green-500': index <= active, 'surface-border': index > active }]">
                                     <i class="pi pi-user"></i>
                                 </span>
                             </button>
                         </template>
                         <template #content="{ nextCallback }">
                             <div class="flex flex-col">
-                                <label class=" m-1 text-gray-1"
-                                    for="name">Name</label>
-                                <InputText id="name"
-                                    v-model="name"
-                                    v-bind="nameAttrs"
-                                    type="text"
-                                    aria-describedby="name-help"
-                                    :class="{ 'p-invalid': errors.name }"
-                                    autofocus />
-                                <small v-if="errors.name"
-                                    id="name-help"
-                                    class="p-error">
-                                    {{ errors.name }}
-                                </small>
+                                <label class=" m-1 text-gray-1" for="name">Name</label>
+                                <InputText id="name" v-model="name" v-bind="nameAttrs" type="text" aria-describedby="name-help" :class="{ 'p-invalid': errors.name }" autofocus />
+                                <small v-if="errors.name" id="name-help" class="p-error">{{ errors.name }}</small>
                             </div>
                             <div class="flex flex-col">
-                                <label class=" m-1 text-gray-1"
-                                    for="lastName">Last Name</label>
-                                <InputText id="lastName"
-                                    v-model="lastName"
-                                    v-bind="lastNameAttrs"
-                                    type="text"
-                                    :class="{ 'p-invalid': errors.lastName }"
-                                    aria-describedby="lastName-help"
-                                    autofocus />
-                                <small v-if="errors.lastName"
-                                    id="lastName-help"
-                                    class="p-error">
-                                    {{ errors.lastName }}
-                                </small>
+                                <label class=" m-1 text-gray-1" for="lastName">Last Name</label>
+                                <InputText id="lastName" v-model="lastName" v-bind="lastNameAttrs" type="text" :class="{ 'p-invalid': errors.lastName }" aria-describedby="lastName-help" autofocus />
+                                <small v-if="errors.lastName" id="lastName-help" class="p-error">{{ errors.lastName }}</small>
                             </div>
                             <div class="flex flex-col">
-                                <label class=" m-1 text-gray-1"
-                                    for="genero">Genero</label>
-                                <Dropdown id="genero"
-                                    v-model="genero"
-                                    :options="generos"
-                                    optionLabel="name"
-                                    v-bind="generoAttrs"
-                                    optionValue="code"
-                                    type="text"
-                                    aria-describedby="genero-help"
-                                    :class="{ 'p-invalid': errors.genero }"
-                                    autofocus />
-                                <small v-if="errors.genero"
-                                    id="genero-help"
-                                    class="p-error">
-                                    {{ errors.genero }}
-                                </small>
+                                <label class=" m-1 text-gray-1" for="genero">Genero</label>
+                                <Dropdown id="genero" v-model="genero" :options="generos" optionLabel="name" v-bind="generoAttrs" optionValue="code" type="text" aria-describedby="genero-help" :class="{ 'p-invalid': errors.genero }" autofocus />
+                                <small v-if="errors.genero" id="genero-help" class="p-error">{{ errors.genero }}</small>
                             </div>
                             <div class="flex flex-col">
-                                <label class=" m-1 text-gray-1"
-                                    for="personalId">Personar ID</label>
-                                <InputText id="personalId"
-                                    v-model="personalId"
-                                    v-bind="personalIdAttrs"
-                                    type="text"
-                                    :class="{ 'p-invalid': errors.personalId }"
-                                    aria-describedby="personalId-help"
-                                    autofocus />
-                                <small v-if="errors.personalId"
-                                    id="personalId-help"
-                                    class="p-error">
-                                    {{ errors.personalId }}
-                                </small>
+                                <label class=" m-1 text-gray-1" for="personalId">Personal ID</label>
+                                <InputText id="personalId" v-model="personalId" v-bind="personalIdAttrs" type="text" :class="{ 'p-invalid': errors.personalId }" aria-describedby="personalId-help" autofocus />
+                                <small v-if="errors.personalId" id="personalId-help" class="p-error">{{ errors.personalId }}</small>
                             </div>
                             <div class="flex flex-col">
-                                <label class=" m-1 text-gray-1"
-                                    for="email">Email</label>
-                                <InputText id="email"
-                                    v-model="email"
-                                    v-bind="emailAttrs"
-                                    type="email"
-                                    :class="{ 'p-invalid': errors.email }"
-                                    aria-describedby="email-help"
-                                    autofocus />
-                                <small v-if="errors.email"
-                                    id="email-help"
-                                    class="p-error">
-                                    {{ errors.email }}
-                                </small>
+                                <label class=" m-1 text-gray-1" for="email">Email</label>
+                                <InputText id="email" v-model="email" v-bind="emailAttrs" type="email" :class="{ 'p-invalid': errors.email }" aria-describedby="email-help" autofocus />
+                                <small v-if="errors.email" id="email-help" class="p-error">{{ errors.email }}</small>
                             </div>
                             <div class="flex flex-col">
-                                <label class=" m-1 text-gray-1"
-                                    for="password">Password</label>
-                                <Password id="password"
-                                    toggleMask
-                                    v-model="password"
-                                    v-bind="passwordAttrs"
-                                    :class="{ 'p-invalid': errors.password }"
-                                    aria-describedby="password-help"
-                                    autofocus />
-                                <small v-if="errors.password"
-                                    id="password-help"
-                                    class="p-error">
-                                    {{ errors.password }}
-                                </small>
+                                <label class=" m-1 text-gray-1" for="password">Password</label>
+                                <Password id="password" toggleMask v-model="password" v-bind="passwordAttrs" :class="{ 'p-invalid': errors.password }" aria-describedby="password-help" autofocus />
+                                <small v-if="errors.password" id="password-help" class="p-error">{{ errors.password }}</small>
                             </div>
                             <div class="flex flex-col">
-                                <label class=" m-1 text-gray-1"
-                                    for="confirmPassword">Confirm Password</label>
-                                <Password id="password"
-                                    toggleMask
-                                    v-model="confirmPassword"
-                                    v-bind="confirmPasswordAttrs"
-                                    type="password"
-                                    :class="{ 'p-invalid': errors.confirmPassword }"
-                                    aria-describedby="confirm-password-help"
-                                    autofocus />
-                                <small v-if="errors.confirmPassword"
-                                    id="confirmPassword-help"
-                                    class="p-error">
-                                    {{ errors.confirmPassword }}
+                                <label class=" m-1 text-gray-1" for="confirmPassword">Confirm Password</label>
+                                <Password id="confirmPassword" toggleMask v-model="confirmPassword" v-bind="confirmPasswordAttrs" type="password" :class="{ 'p-invalid': errors.confirmPassword || !passwordsMatch }" aria-describedby="confirm-password-help" autofocus />
+                                <small v-if="errors.confirmPassword || !passwordsMatch" id="confirmPassword-help" class="p-error">
+                                    {{ errors.confirmPassword || 'Passwords must match' }}
                                 </small>
                             </div>
                             <div>
                                 <div class="flex gap-2 m-2 mt-4 items-center">
-                                    <Checkbox id="accept"
-                                        v-model="acceptCondition"
-                                        v-bind="acceptConditionAttrs"
-                                        name="accept"
-                                        :class="{ 'p-invalid': errors.acceptCondition }"
-                                        :binary="true"
-                                        value="Accept"
-                                        aria-describedby="accept-condition-help" />
-                                    <label class="text-gray-1 text-sm"
-                                        for="accept">I agree to the <a href="">terms and conditions.</a></label>
+                                    <Checkbox id="accept" v-model="acceptCondition" v-bind="acceptConditionAttrs" name="accept" :class="{ 'p-invalid': errors.acceptCondition }" :binary="true" value="Accept" aria-describedby="accept-condition-help" />
+                                    <label class="text-gray-1 text-sm" for="accept">I agree to the <a href="">terms and conditions.</a></label>
                                 </div>
-                                <small v-if="errors.acceptCondition"
-                                    id="acceptCondition-help"
-                                    class="p-error text-center">
-                                    {{ errors.acceptCondition }}
-                                </small>
+                                <small v-if="errors.acceptCondition" id="acceptCondition-help" class="p-error text-center">{{ errors.acceptCondition }}</small>
                                 <div class="flex justify-end mt-2">
-                                    <Button @click="nextCallback"
-                                        label="Siguiente"
-                                        class="m-2"
-                                        aria-describedby="next-help" />
+                                    <Button :disabled="!passwordsMatch" @click="nextCallback" label="Siguiente" class="m-2" aria-describedby="next-help" />
                                 </div>
                             </div>
                         </template>
@@ -272,149 +212,58 @@ const register = handleSubmit(async (values) => {
                                     },
                                     text: { style: { color: '#707070', backgroundColor: '#fff' } }
                                 }, showDelay: 1000, hideDelay: 300
-                            }"
-                                class="bg-transparent border-none inline-flex flex-column gap-2"
-                                @click="clickCallback">
-                                <span
-                                    :class="['rounded-md border-2 w-8 h-8 inline-flex items-center justify-center', { 'text-white bg-green-500 border-green-500': index <= active, 'surface-border': index > active }]">
+                            }" class="bg-transparent border-none inline-flex flex-column gap-2" @click="clickCallback">
+                                <span :class="['rounded-md border-2 w-8 h-8 inline-flex items-center justify-center', { 'text-white bg-green-500 border-green-500': index <= active, 'surface-border': index > active }]">
                                     <i class="pi pi-heart"></i>
                                 </span>
                             </button>
                         </template>
                         <template #content="{ prevCallback }">
                             <div class="flex flex-col">
-                                <label class=" m-1 text-gray-1"
-                                    for="bornDate">Fecha de Nacimiento</label>
-                                <Calendar id="bornDate"
-                                    v-model="bornDate"
-                                    v-bind="bornDateAttrs"
-                                    type="bornDate"
-                                    showIcon
-                                    iconDisplay="input"
-                                    :maxDate="maxDate"
-                                    :class="{ 'p-invalid': errors.bornDate }"
-                                    aria-describedby="date-born-help" />
-                                <small v-if="errors.bornDate"
-                                    id="bornDate-help"
-                                    class="p-error">
-                                    {{ errors.bornDate }}
-                                </small>
+                                <label class=" m-1 text-gray-1" for="bornDate">Fecha de Nacimiento</label>
+                                <Calendar id="bornDate" v-model="bornDate" v-bind="bornDateAttrs" type="bornDate" showIcon iconDisplay="input" :maxDate="maxDate" :class="{ 'p-invalid': errors.bornDate }" aria-describedby="date-born-help" />
+                                <small v-if="errors.bornDate" id="bornDate-help" class="p-error">{{ errors.bornDate }}</small>
                             </div>
                             <div class="flex flex-col">
-                                <label class=" m-1 text-gray-1"
-                                    for="address">Direccion</label>
-                                <InputText v-model="address"
-                                    v-bind="addressAttrs"
-                                    :class="{ 'p-invalid': errors.address }"
-                                    inputId="address"
-                                    aria-describedby="address-help" />
-                                <small v-if="errors.address"
-                                    id="address-help"
-                                    class="p-error">
-                                    {{ errors.address }}
-                                </small>
+                                <label class=" m-1 text-gray-1" for="address">Direccion</label>
+                                <InputText v-model="address" v-bind="addressAttrs" :class="{ 'p-invalid': errors.address }" inputId="address" aria-describedby="address-help" />
+                                <small v-if="errors.address" id="address-help" class="p-error">{{ errors.address }}</small>
                             </div>
                             <div class="flex flex-col">
-                                <label class=" m-1 text-gray-1"
-                                    for="height">Estatura (m)</label>
-                                <InputNumber v-model="height"
-                                    v-bind="heightAttrs"
-                                    inputId="height"
-                                    :minFractionDigits="1"
-                                    :class="{ 'p-invalid': errors.height }"
-                                    suffix=" m"
-                                    aria-describedby="height-help" />
-                                <small v-if="errors.height"
-                                    id="height-help"
-                                    class="p-error">
-                                    {{ errors.height }}
-                                </small>
+                                <label class=" m-1 text-gray-1" for="height">Estatura (m)</label>
+                                <InputNumber v-model="height" v-bind="heightAttrs" inputId="height" :minFractionDigits="1" :class="{ 'p-invalid': errors.height }" suffix=" m" aria-describedby="height-help" />
+                                <small v-if="errors.height" id="height-help" class="p-error">{{ errors.height }}</small>
                             </div>
                             <div class="flex flex-col">
-                                <label class=" m-1 text-gray-1"
-                                    for="weight">Peso (kg)</label>
-                                <InputNumber v-model="weight"
-                                    v-bind="weightAttrs"
-                                    inputId="weight"
-                                    :minFractionDigits="1"
-                                    :class="{ 'p-invalid': errors.weight }"
-                                    suffix=" kg"
-                                    aria-describedby="weight-help" />
-                                <small v-if="errors.weight"
-                                    id="weight-help"
-                                    class="p-error">
-                                    {{ errors.weight }}
-                                </small>
-                            </div>
-
-                            <div class="flex flex-col">
-                                <div class="flex justify-start items-center">
-                                    <Checkbox inputId="allergy"
-                                        v-model="haveAllergy"
-                                        :binary="true"
-                                        value="allergy"
-                                        name="allergy"
-                                        aria-describedby="allergy-check-help" />
-                                    <label class=" m-1 text-gray-1"
-                                        for="allergy">Sufre de alguna alergia?</label>
-                                </div>
-                                <Textarea v-show="haveAllergy"
-                                    v-model="allergy"
-                                    v-bind="allergyAttrs"
-                                    rows="5"
-                                    placeholder="Especifique la alergia o alergias."
-                                    cols="30"
-                                    aria-describedby="allergy-help" />
+                                <label class=" m-1 text-gray-1" for="weight">Peso (kg)</label>
+                                <InputNumber v-model="weight" v-bind="weightAttrs" inputId="weight" :minFractionDigits="1" :class="{ 'p-invalid': errors.weight }" suffix=" kg" aria-describedby="weight-help" />
+                                <small v-if="errors.weight" id="weight-help" class="p-error">{{ errors.weight }}</small>
                             </div>
                             <div class="flex flex-col">
                                 <div class="flex justify-start items-center">
-                                    <Checkbox inputId="personalHistory"
-                                        v-model="havePersonalHistory"
-                                        :binary="true"
-                                        value="personalHistory"
-                                        name="personalHistory"
-                                        aria-describedby="personal-history-check-help" />
-                                    <label class=" m-1 text-gray-1"
-                                        for="personalHistory">Tiene antecedentes personales?</label>
+                                    <Checkbox inputId="allergy" v-model="haveAllergy" :binary="true" value="allergy" name="allergy" aria-describedby="allergy-check-help" />
+                                    <label class=" m-1 text-gray-1" for="allergy">Sufre de alguna alergia?</label>
                                 </div>
-                                <Textarea v-show="havePersonalHistory"
-                                    v-model="personalHistory"
-                                    v-bind="personalHistoryAttrs"
-                                    rows="5"
-                                    placeholder="Enfermedades que padece."
-                                    cols="30"
-                                    aria-describedby="personal-history-help" />
+                                <Textarea v-show="haveAllergy" v-model="allergy" v-bind="allergyAttrs" rows="5" placeholder="Especifique la alergia o alergias." cols="30" aria-describedby="allergy-help" />
                             </div>
                             <div class="flex flex-col">
                                 <div class="flex justify-start items-center">
-                                    <Checkbox inputId="familyHistory"
-                                        v-model="haveFamilyHistory"
-                                        :binary="true"
-                                        value="familyHistory"
-                                        name="familyHistory"
-                                        aria-describedby="family-history-check-help" />
-                                    <label class=" m-1 text-gray-1"
-                                        for="familyHistory">Tiene antecedente personales?</label>
+                                    <Checkbox inputId="personalHistory" v-model="havePersonalHistory" :binary="true" value="personalHistory" name="personalHistory" aria-describedby="personal-history-check-help" />
+                                    <label class=" m-1 text-gray-1" for="personalHistory">Tiene antecedentes personales?</label>
                                 </div>
-                                <Textarea v-show="haveFamilyHistory"
-                                    v-model="familyHistory"
-                                    v-bind="familyHistoryAttrs"
-                                    rows="5"
-                                    placeholder="Enfermedades heridataria o que padece algun familiar que sea relevante."
-                                    cols="30"
-                                    aria-describedby="family-history-help" />
+                                <Textarea v-show="havePersonalHistory" v-model="personalHistory" v-bind="personalHistoryAttrs" rows="5" placeholder="Enfermedades que padece." cols="30" aria-describedby="personal-history-help" />
+                            </div>
+                            <div class="flex flex-col">
+                                <div class="flex justify-start items-center">
+                                    <Checkbox inputId="familyHistory" v-model="haveFamilyHistory" :binary="true" value="familyHistory" name="familyHistory" aria-describedby="family-history-check-help" />
+                                    <label class=" m-1 text-gray-1" for="familyHistory">Tiene antecedentes familiares?</label>
+                                </div>
+                                <Textarea v-show="haveFamilyHistory" v-model="familyHistory" v-bind="familyHistoryAttrs" rows="5" placeholder="Enfermedades heridataria o que padece algun familiar que sea relevante." cols="30" aria-describedby="family-history-help" />
                             </div>
                             <div>
                                 <div class="flex justify-between">
-                                    <Button @click="prevCallback"
-                                        severity="secondary"
-                                        label="Anterior"
-                                        class="m-2"
-                                        aria-describedby="previous-help" />
-                                    <Button type="submit"
-                                        label="Registrarse"
-                                        class="m-2"
-                                        aria-describedby="register-help" />
+                                    <Button @click="prevCallback" severity="secondary" label="Anterior" class="m-2" aria-describedby="previous-help" />
+                                    <Button type="submit" label="Registrarse" class="m-2" aria-describedby="register-help" />
                                 </div>
                             </div>
                         </template>
@@ -424,5 +273,3 @@ const register = handleSubmit(async (values) => {
         </div>
     </div>
 </template>
-para la información medica del paciente se debe agregar fecha de nacimiento, estatura, peso, antecedentes familiares,
-sufre de alguna enfermedad (si/no), antecedentes personales
