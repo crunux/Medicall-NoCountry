@@ -1,35 +1,15 @@
 <script setup lang="ts">
+
 import { useForm } from 'vee-validate';
 import * as y from 'yup';
-import type { Genero } from '..types'
+import type { Genero } from '../types';
 
-interface Form {
-    0: {
-        name: string;
-        lastName: string;
-        genero: Genero;
-        personalId: string;
-        address: string;
-        email: string;
-        password: string;
-        confirmPassword: string;
-        acceptCondition: boolean;
-    },
-    1: {
-        bornDate: string;
-        height: string;
-        weight: string;
-        allergy: string;
-        personalHistory: string;
-        familyHistory: string;
-    }
-
-}
 const active = ref(0);
 const haveAllergy = ref(false);
 const havePersonalHistory = ref(false);
 const haveFamilyHistory = ref(false);
 const maxDate = ref(new Date());
+const passwordsMatch = ref(true);
 
 const validationSchema = [
     y.object({
@@ -53,9 +33,7 @@ const validationSchema = [
     })
 ];
 
-const currentSchema = computed(() => {
-    return validationSchema[active.value];
-});
+const currentSchema = computed(() => validationSchema[active.value]);
 
 const { handleSubmit, defineField, errors } = useForm({
     validationSchema: currentSchema,
@@ -84,11 +62,50 @@ const generos = ref([
     { name: 'Femenino', code: 'F' },
     { name: 'Otros', code: 'O' }
 ]);
+
+// Function to format date
+const formatDate = (date: string) => {
+    const d = new Date(date);
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+};
+
 const register = handleSubmit(async (values) => {
-    console.log(values);
-    // await register(values);
+    //console.log(values.bornDate);
+    try {
+        // Format the bornDate to year-month-day
+        const formattedValues = {
+            ...values,
+
+            bornDate: formatDate(values.bornDate),
+
+            type_profile: 1
+        };
+        console.log(formattedValues);
+
+        const response = await fetch('http://127.0.0.1:8000/api/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formattedValues),
+        });
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        console.log('Success:', data);
+    } catch (error) {
+        console.error('Error:', error);
+    }
 });
 
+// Watch for password and confirmPassword changes
+watch([password, confirmPassword], ([newPassword, newConfirmPassword]) => {
+    passwordsMatch.value = newPassword === newConfirmPassword;
+});
 </script>
 <template>
     <div class="ml-[calc(50% - 187px)] flex items-center justify-center p-4">
@@ -130,9 +147,7 @@ const register = handleSubmit(async (values) => {
                                     autofocus />
                                 <small v-if="errors.name"
                                     id="name-help"
-                                    class="p-error">
-                                    {{ errors.name }}
-                                </small>
+                                    class="p-error">{{ errors.name }}</small>
                             </div>
                             <div class="flex flex-col">
                                 <label class=" m-1 text-gray-1"
@@ -146,9 +161,7 @@ const register = handleSubmit(async (values) => {
                                     autofocus />
                                 <small v-if="errors.lastName"
                                     id="lastName-help"
-                                    class="p-error">
-                                    {{ errors.lastName }}
-                                </small>
+                                    class="p-error">{{ errors.lastName }}</small>
                             </div>
                             <div class="flex flex-col">
                                 <label class=" m-1 text-gray-1"
@@ -165,13 +178,11 @@ const register = handleSubmit(async (values) => {
                                     autofocus />
                                 <small v-if="errors.genero"
                                     id="genero-help"
-                                    class="p-error">
-                                    {{ errors.genero }}
-                                </small>
+                                    class="p-error">{{ errors.genero }}</small>
                             </div>
                             <div class="flex flex-col">
                                 <label class=" m-1 text-gray-1"
-                                    for="personalId">Personar ID</label>
+                                    for="personalId">Personal ID</label>
                                 <InputText id="personalId"
                                     v-model="personalId"
                                     v-bind="personalIdAttrs"
@@ -181,9 +192,7 @@ const register = handleSubmit(async (values) => {
                                     autofocus />
                                 <small v-if="errors.personalId"
                                     id="personalId-help"
-                                    class="p-error">
-                                    {{ errors.personalId }}
-                                </small>
+                                    class="p-error">{{ errors.personalId }}</small>
                             </div>
                             <div class="flex flex-col">
                                 <label class=" m-1 text-gray-1"
@@ -197,9 +206,7 @@ const register = handleSubmit(async (values) => {
                                     autofocus />
                                 <small v-if="errors.email"
                                     id="email-help"
-                                    class="p-error">
-                                    {{ errors.email }}
-                                </small>
+                                    class="p-error">{{ errors.email }}</small>
                             </div>
                             <div class="flex flex-col">
                                 <label class=" m-1 text-gray-1"
@@ -213,25 +220,23 @@ const register = handleSubmit(async (values) => {
                                     autofocus />
                                 <small v-if="errors.password"
                                     id="password-help"
-                                    class="p-error">
-                                    {{ errors.password }}
-                                </small>
+                                    class="p-error">{{ errors.password }}</small>
                             </div>
                             <div class="flex flex-col">
                                 <label class=" m-1 text-gray-1"
                                     for="confirmPassword">Confirm Password</label>
-                                <Password id="password"
+                                <Password id="confirmPassword"
                                     toggleMask
                                     v-model="confirmPassword"
                                     v-bind="confirmPasswordAttrs"
                                     type="password"
-                                    :class="{ 'p-invalid': errors.confirmPassword }"
+                                    :class="{ 'p-invalid': errors.confirmPassword || !passwordsMatch }"
                                     aria-describedby="confirm-password-help"
                                     autofocus />
-                                <small v-if="errors.confirmPassword"
+                                <small v-if="errors.confirmPassword || !passwordsMatch"
                                     id="confirmPassword-help"
                                     class="p-error">
-                                    {{ errors.confirmPassword }}
+                                    {{ errors.confirmPassword || 'Passwords must match' }}
                                 </small>
                             </div>
                             <div>
@@ -249,11 +254,10 @@ const register = handleSubmit(async (values) => {
                                 </div>
                                 <small v-if="errors.acceptCondition"
                                     id="acceptCondition-help"
-                                    class="p-error text-center">
-                                    {{ errors.acceptCondition }}
-                                </small>
+                                    class="p-error text-center">{{ errors.acceptCondition }}</small>
                                 <div class="flex justify-end mt-2">
-                                    <Button @click="nextCallback"
+                                    <Button 
+                                        @click="nextCallback"
                                         label="Siguiente"
                                         class="m-2"
                                         aria-describedby="next-help" />
@@ -296,9 +300,7 @@ const register = handleSubmit(async (values) => {
                                     aria-describedby="date-born-help" />
                                 <small v-if="errors.bornDate"
                                     id="bornDate-help"
-                                    class="p-error">
-                                    {{ errors.bornDate }}
-                                </small>
+                                    class="p-error">{{ errors.bornDate }}</small>
                             </div>
                             <div class="flex flex-col">
                                 <label class=" m-1 text-gray-1"
@@ -310,9 +312,7 @@ const register = handleSubmit(async (values) => {
                                     aria-describedby="address-help" />
                                 <small v-if="errors.address"
                                     id="address-help"
-                                    class="p-error">
-                                    {{ errors.address }}
-                                </small>
+                                    class="p-error">{{ errors.address }}</small>
                             </div>
                             <div class="flex flex-col">
                                 <label class=" m-1 text-gray-1"
@@ -326,9 +326,7 @@ const register = handleSubmit(async (values) => {
                                     aria-describedby="height-help" />
                                 <small v-if="errors.height"
                                     id="height-help"
-                                    class="p-error">
-                                    {{ errors.height }}
-                                </small>
+                                    class="p-error">{{ errors.height }}</small>
                             </div>
                             <div class="flex flex-col">
                                 <label class=" m-1 text-gray-1"
@@ -342,11 +340,8 @@ const register = handleSubmit(async (values) => {
                                     aria-describedby="weight-help" />
                                 <small v-if="errors.weight"
                                     id="weight-help"
-                                    class="p-error">
-                                    {{ errors.weight }}
-                                </small>
+                                    class="p-error">{{ errors.weight }}</small>
                             </div>
-
                             <div class="flex flex-col">
                                 <div class="flex justify-start items-center">
                                     <Checkbox inputId="allergy"
@@ -394,7 +389,7 @@ const register = handleSubmit(async (values) => {
                                         name="familyHistory"
                                         aria-describedby="family-history-check-help" />
                                     <label class=" m-1 text-gray-1"
-                                        for="familyHistory">Tiene antecedente personales?</label>
+                                        for="familyHistory">Tiene antecedentes familiares?</label>
                                 </div>
                                 <Textarea v-show="haveFamilyHistory"
                                     v-model="familyHistory"
@@ -411,7 +406,8 @@ const register = handleSubmit(async (values) => {
                                         label="Anterior"
                                         class="m-2"
                                         aria-describedby="previous-help" />
-                                    <Button type="submit"
+                                    <Button :disabled="!passwordsMatch"
+                                        type="submit"
                                         label="Registrarse"
                                         class="m-2"
                                         aria-describedby="register-help" />
@@ -424,5 +420,3 @@ const register = handleSubmit(async (values) => {
         </div>
     </div>
 </template>
-para la información medica del paciente se debe agregar fecha de nacimiento, estatura, peso, antecedentes familiares,
-sufre de alguna enfermedad (si/no), antecedentes personales
