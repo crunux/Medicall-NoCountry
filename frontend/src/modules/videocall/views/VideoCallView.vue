@@ -16,7 +16,7 @@ const join = () => {
 
 const leave = () => {
   webrtc.value?.leave();
-  router.push({ name: 'login' });
+  router.push({ name: 'home' });
 };
 </script>
 <template>
