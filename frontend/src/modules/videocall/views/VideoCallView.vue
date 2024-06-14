@@ -19,7 +19,7 @@ const leave = () => {
     label="Room ID"
     v-model="roomId" />
   <VideoWebRTC ref="webrtc"
-    socketURL="http://143.198.128.118:3000/"
+    socketURL="https://api.crunux.tech/"
     cameraHeight="500"
     :roomId
     :enableLogs="true" />
