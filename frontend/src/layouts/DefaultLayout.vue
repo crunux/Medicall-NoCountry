@@ -1,9 +1,16 @@
 <script setup lang="ts">
+import { useAuthStore } from '@/stores/useAuthStore';
+import { useRoute, useRouter } from 'vue-router';
 
+const store = useAuthStore();
 const { currentRoute } = useRouter();
+const { query } = useRoute();
+
+console.log(query);
+
 
 const menuProfile = ref<InstanceType<typeof MenuProfile> | null>(null)
-const userLoggedIn = computed(() => false);
+const userLoggedIn = computed(() => store.user);
 const activateLogin = computed(() => currentRoute.value.path !== '/login');
 const activateRegister = computed(() => currentRoute.value.path !== '/register');
 
@@ -58,11 +65,12 @@ console.log(menuProfile);
                 @click="menuProfile?.toggleMenu">
                 <Avatar v-badge.danger="4"
                     v-if="userLoggedIn"
-                    label="Dr."
-                    icon="pi pi-user" />
+                    :image="userLoggedIn.profile_photo_url"
+                    :icon="userLoggedIn.profile_photo_url ? 'pi pi-user' : ''" />
                 <MenuProfile ref="menuProfile"
                     :popup="true"
-                    :items />
+                    :items
+                    :user="userLoggedIn" />
             </div>
         </div>
     </navbar>

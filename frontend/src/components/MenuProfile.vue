@@ -1,13 +1,16 @@
 <script setup lang="ts">
-import type { MenuItem } from '@/types';
+import type { MenuItem, User } from '@/types';
 const el = ref<InstanceType<typeof Menu> | null>(null)
 
-withDefaults(defineProps<{
+const { user, popup, items } = withDefaults(defineProps<{
     popup: boolean,
     items: MenuItem[]
+    user: User
 }>(), {
     popup: false
 })
+
+const currentUser = computed(() => user.type_profile === 1 ? 'Paciente' : user.type_profile === 2 ? 'Doctor' : 'Admin')
 
 
 const toggleMenu = (event: Event) => {
@@ -25,7 +28,7 @@ defineExpose({
             :popup>
             <template #start>
                 <span class="inline-flex items-center gap-1 p-2">
-                    <span class=" text-xl font-semibold">user</span>
+                    <span class="text-center text-xl font-semibold">User</span>
                 </span>
             </template>
             <template #submenuheader="{ item }">
@@ -51,8 +54,8 @@ defineExpose({
                     <!-- <Avatar icon="pi pi-user"
                         class="mr-2" /> -->
                     <span class="inline-flex flex-col">
-                        <span class="font-bold">Name</span>
-                        <span class="text-sm">typeUser</span>
+                        <span class="font-bold">{{ user.name }}</span>
+                        <span class="text-sm">{{ currentUser }}</span>
                     </span>
                 </button>
             </template>
