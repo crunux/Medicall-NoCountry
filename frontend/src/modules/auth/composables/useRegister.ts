@@ -1,51 +1,32 @@
 import { useAuthStore } from "@/stores/useAuthStore"
 import type { GenericObject } from "vee-validate";
+import { useDateFormat } from '@vueuse/core'
 import router from "@/router";
-
-let HOST_BACKEND = import.meta.env.VITE_HOST_BACKEND
-const PORT_BACKEND = import.meta.env.VITE_PORT_BACKEND || null
-
-if (PORT_BACKEND) {
-    HOST_BACKEND = `${HOST_BACKEND}:${PORT_BACKEND}`
-}
-
-// Function to format date
-const formatDate = (date: string) => {
-    const d = new Date(date);
-    const year = d.getFullYear();
-    const month = String(d.getMonth() + 1).padStart(2, '0');
-    const day = String(d.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
-};
+import config from "@/utils/config";
 
 const useRegister = () => {
     const store = useAuthStore()
+    const { BASE_URL } = config('/api/register')
     const register = async (values: GenericObject, typeUser: number) => {
         try {
             // Format the bornDate to year-month-day
             const formattedValues = {
                 ...values,
-
-                bornDate: formatDate(values.bornDate),
-
+                bornDate: useDateFormat(values.bornDate, 'YYYY-MM-DD').value,
                 type_profile: typeUser
             };
-            console.log(formattedValues);
-
-            const response = await fetch(`https://${HOST_BACKEND}/api/register`, {
+            const response = await fetch(BASE_URL, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(formattedValues),
             });
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
+            if (!response.ok) throw new Error('Network response was not ok');
             const data = await response.json();
             store.setToken(data.access_token);
-            console.log('Success:', data);
-            router.push({ name: 'videocall' });
+            store.setUser(data.user)
+            router.push({ name: 'profile' });
         } catch (error) {
             console.error('Error:', error);
         }
