@@ -40,8 +40,8 @@ export default defineComponent({
         },
         socketURL: {
             type: String,
-            default: 'https://videocall-socket-pi.vercel.app'
-            //default: 'https://localhost:3000'
+            //default: 'https://videocall-socket-pi.vercel.app'
+            default: 'https://localhost:3000'
             //default: 'https://192.168.1.201:3000'
         },
         cameraHeight: {

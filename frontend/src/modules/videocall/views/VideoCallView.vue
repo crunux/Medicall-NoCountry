@@ -2,7 +2,7 @@
 import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 
-const webrtc = ref(null);
+const webrtc = ref<HTMLElement | null>(null);
 const roomId = ref('public-room-v2');
 const router = useRouter();
 
