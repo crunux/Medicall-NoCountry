@@ -11,13 +11,19 @@ import { PrimeVueResolver } from 'unplugin-vue-components/resolvers';
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
-    vue(),
+    vue({
+      template: {
+        compilerOptions: {
+          isCustomElement: (tag) => ['VideoWebRTCSetup', 'navbar', 'VideoWebRTC' ].includes(tag),
+        }
+      }
+      }),
     Components({
       resolvers: [
         PrimeVueResolver()
       ],
       deep: true,
-      dirs: ['src/components', 'node_modules/primevue/src/components', 'src/modules', 'node_modules/primeicons', 'src/layouts', 'node_modules/vee-validate', 'node_modules/@vueuse/core'],
+      dirs: ['src/components', 'node_modules/primevue/src/components', 'node_modules/primeicons', 'src/layouts', 'node_modules/vee-validate', 'node_modules/@vueuse/core', 'node_modules/@unhead/vue/components'],
       dts: true,
       types: [{
         from: 'vue-router',
@@ -39,12 +45,14 @@ export default defineConfig({
         'vue-router',
         '@vueuse/core',
         'vee-validate',
+        'pinia',
         {
           from: 'vue-router',
           imports: ['RouteLocationRaw'],
           type: true,
         },
       ],
+      dirs: ['./src', '@/stores'],
       vueTemplate: true,
       eslintrc: {
         enabled: true,
