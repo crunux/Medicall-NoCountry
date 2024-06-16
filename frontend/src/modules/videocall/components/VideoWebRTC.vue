@@ -32,16 +32,16 @@ export default defineComponent({
             state: 'disconnect',
         };
     },
-    expose: ['state', 'join', 'leave', 'capture', 'shareScreen'],
+    //expose: ['state', 'join', 'leave', 'capture', 'shareScreen'],
     props: {
         roomId: {
             type: String,
-            default: 'public-room-v2'
+            default: 'room-4723'
         },
         socketURL: {
             type: String,
-            default: 'https://videocall-socket-pi.vercel.app'
-            //default: 'https://localhost:3000'
+            //default: 'https://videocall-socket-pi.vercel.app'
+            default: 'https://localhost:3000'
             //default: 'https://192.168.1.201:3000'
         },
         cameraHeight: {
