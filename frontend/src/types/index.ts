@@ -72,3 +72,24 @@ export interface MenuItemCommandEvent {
      */
     [key: string]: any;
 }
+
+export interface Response {
+    message: string;
+    accesTocke: string;
+    token_type: string;
+    user: User;
+}
+
+export interface User {
+    id: number;
+    name: string;
+    email: string;
+    email_verified_at: null;
+    two_factor_confirmed_at: null;
+    current_team_id: null;
+    profile_photo_path: null;
+    created_at: Date;
+    updated_at: Date;
+    type_profile: number;
+    profile_photo_url: string;
+}

@@ -28,7 +28,7 @@ const router = createRouter({
     {
       path: '/login',
       name: 'login',
-      component: () => import(/* webpackChunkName: "login" */'../../src/modules/auth/views/LoginView.vue'),
+      component: () => import(/* webpackChunkName: "login" */'../modules/auth/views/LoginView.vue'),
       meta: {
         requireAuth: false
       }
@@ -36,19 +36,29 @@ const router = createRouter({
     {
       path: '/register',
       name: 'register',
-      component: () => import(/* webpackChunkName: "register" */'../../src/modules/auth/views/RegisterView.vue'),
+      component: () => import(/* webpackChunkName: "register" */'../modules/auth/views/RegisterView.vue'),
       meta: {
         requireAuth: false
       }
     },
+    // videcall
     {
       path: '/videocall',
       name: 'videocall',
-      component: () => import(/* webpackChunkName: "videocall" */'../../src/modules/videocall/views/VideoCallView.vue'),
+      component: () => import(/* webpackChunkName: "videocall" */'../modules/videocall/views/VideoCallView.vue'),
       meta: {
         requireAuth: true
       }
-    }
+    },
+    // medicos
+    {
+      path: '/medicos',
+      name: 'medicos',
+      component: () => import(/* webpackChunkName: "medicos" */'../modules/medico/views/MedicosView.vue'),
+      meta: {
+        requireAuth: true
+      }
+    },
   ]
 })
 

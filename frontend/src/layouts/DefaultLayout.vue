@@ -4,9 +4,6 @@ import { useRoute, useRouter } from 'vue-router';
 
 const store = useAuthStore();
 const { currentRoute } = useRouter();
-const { query } = useRoute();
-
-console.log(query);
 
 
 const menuProfile = ref<InstanceType<typeof MenuProfile> | null>(null)
