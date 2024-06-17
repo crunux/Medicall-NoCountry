@@ -14,10 +14,10 @@ export default defineConfig({
     vue({
       template: {
         compilerOptions: {
-          isCustomElement: (tag) => ['VideoWebRTCSetup', 'navbar', 'VideoWebRTC' ].includes(tag),
+          isCustomElement: (tag) => ['VideoWebRTCSetup', 'navbar'].includes(tag),
         }
       }
-      }),
+    }),
     Components({
       resolvers: [
         PrimeVueResolver()

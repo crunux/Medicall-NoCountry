@@ -23,16 +23,21 @@ export default defineComponent({
     name: 'video-webrtc',
     components: {
     },
+    expose: ['status', 'join', 'leave', 'capture', 'shareScreen'],
     data() {
         return {
             signalClient: null,
             videoList: [],
             canvas: null,
             socket: null,
-            state: 'disconnect',
-        };
+            status: 'disconnected',
+            // localStream: {},
+            // constraints: {
+            //     video: true,
+            //     audio: true
+            // },
+        }
     },
-    //expose: ['state', 'join', 'leave', 'capture', 'shareScreen'],
     props: {
         roomId: {
             type: String,
@@ -80,7 +85,11 @@ export default defineComponent({
                 return { rejectUnauthorized: false, transports: ['polling', 'websocket'] };
             }
         },
-        deviceId: {
+        cameraId: {
+            type: String,
+            default: null
+        },
+        audioId: {
             type: String,
             default: null
         }
@@ -93,33 +102,22 @@ export default defineComponent({
         async join() {
             var that = this;
             this.log('join');
-            // const {
-            //     videoInputs: cameras,
-            //     audioInputs: microphones,
-            // } = useDevicesList({
-            //     requestPermissions: true,
-            // })
-
-            // const currentCamera = computed(() => cameras.value[0]?.deviceId)
-            // const currentMicrophone = computed(() => microphones.value[0]?.deviceId)
-
-            this.state = 'connected'
+            this.status = 'connected'
             this.socket = io(this.socketURL, this.ioOptions);
             this.signalClient = new SimpleSignalClient(this.socket);
+
             let constraints = {
                 video: that.enableVideo,
                 audio: that.enableAudio
             };
-            if (that.deviceId && that.enableVideo) {
-                constraints.video = { deviceId: { exact: that.deviceId } };
+
+            if (that.cameraId && that.enableVideo) {
+                constraints.video = { deviceId: { exact: that.cameraId } };
             }
 
-            // const { stream: localStream } = useUserMedia({
-            //     constraints: {
-            //         video: { deviceId: currentCamera },
-            //         audio: { deviceId: currentMicrophone, }
-            //     }
-            // })
+            if (that.audioId && that.enableAudio) {
+                constraints.audio = { deviceId: { exact: that.audioId } };
+            }
             const localStream = await navigator.mediaDevices.getUserMedia(constraints);
             this.log('opened', localStream);
             this.joinedRoom(localStream, true);
@@ -206,7 +204,7 @@ export default defineComponent({
             that.$emit('joined-room', stream.id);
         },
         leave() {
-            this.state = 'left'
+            this.status = 'disconnected'
             this.videoList.forEach(v => v.stream.getTracks().forEach(t => t.stop()));
             this.videoList = [];
             this.signalClient.peers().forEach(peer => peer.removeAllListeners())
