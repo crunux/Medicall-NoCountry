@@ -1,5 +1,5 @@
 <script setup lang="ts"></script>
 <template>
-  <div class="app"></div>
+  <h1>Admin</h1>
 </template>
 <style scoped></style>

@@ -24,6 +24,7 @@ const loginUser = async () => {
                     <InputText id="email"
                         v-model="loginForm.email"
                         type="email"
+                        name="email"
                         autofocus />
                 </div>
 
@@ -37,12 +38,14 @@ const loginUser = async () => {
                         v-model="loginForm.password"
                         toggleMask
                         required
+                        name="password"
                         :feedback="false"
                         inputClass="pass" />
                 </div>
                 <div class="flex flex-col">
                     <Button type="submit"
                         label="Ingresar"
+                        name="ingresar"
                         class="m-2" />
                 </div>
             </form>
