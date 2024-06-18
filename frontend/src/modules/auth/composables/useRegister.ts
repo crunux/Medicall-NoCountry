@@ -2,11 +2,13 @@ import { useAuthStore } from "@/stores/useAuthStore"
 import type { GenericObject } from "vee-validate";
 import { useDateFormat } from '@vueuse/core'
 import router from "@/router";
-import config from "@/utils/config";
+import  useConfig  from '../../../utils/useConfig'
+const { getUrlPath } = useConfig
+
 
 const useRegister = () => {
     const store = useAuthStore()
-    const { BASE_URL } = config('/api/register')
+    const { BASE_URL } = getUrlPath('/api/register')
     const register = async (values: GenericObject, typeUser: number) => {
         try {
             // Format the bornDate to year-month-day

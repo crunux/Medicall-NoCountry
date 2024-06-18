@@ -1,11 +1,12 @@
 import router from "@/router";
 import { useAuthStore } from '@/stores/useAuthStore';
-import  config  from '../../../utils/config'
-
+import  useConfig  from '../../../utils/useConfig'
+const { getUrlPath } = useConfig
 
 const useLogin = () => {
+    
     const store = useAuthStore()
-    const { BASE_URL } = config('/api/login')
+    const { BASE_URL } = getUrlPath('/api/login')
     const login = async (values: any) => {
         try {
             const response = await fetch(BASE_URL, {
