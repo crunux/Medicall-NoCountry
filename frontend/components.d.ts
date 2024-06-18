@@ -27,6 +27,7 @@ declare module 'vue' {
     MenuProfile: typeof import('./src/components/MenuProfile.vue')['default']
     PacientesForm: typeof import('./src/modules/auth/components/PacientesForm.vue')['default']
     Password: typeof import('primevue/password')['default']
+    ProfileView: typeof import('./src/modules/profile/views/ProfileView.vue')['default']
     RegisterView: typeof import('./src/modules/auth/views/RegisterView.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']

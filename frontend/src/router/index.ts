@@ -41,10 +41,20 @@ const router = createRouter({
         requireAuth: false
       }
     },
+    // Video Call
     {
       path: '/videocall',
       name: 'videocall',
       component: () => import(/* webpackChunkName: "videocall" */'../../src/modules/videocall/views/VideoCallView.vue'),
+      meta: {
+        requireAuth: true
+      }
+    },
+    // Profile
+    {
+      path: '/profile',
+      name: 'profile',
+      component: () => import(/* */ '../../src/modules/profile/views/ProfileView.vue'),
       meta: {
         requireAuth: true
       }
