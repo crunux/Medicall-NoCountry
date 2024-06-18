@@ -1,18 +1,27 @@
-import { computed } from "vue"
+const HOST_BACKEND = import.meta.env.VITE_HOST_BACKEND || 'localhost'
+const PORT_BACKEND = import.meta.env.VITE_PORT_BACKEND || null
 
-const useConfig = () => {
-  const HOST_BACKEND = import.meta.env.VITE_HOST_BACKEND || 'localhost'
-  const PORT_BACKEND = import.meta.env.VITE_PORT_BACKEND || null
+interface URLPATH {
+  BASE_URL: string
+}
 
-  const getUrlPath = (endpoint: string): { BASE_URL : string } =>{
-    return {
-    BASE_URL: !PORT_BACKEND ? `https://${HOST_BACKEND}${endpoint}`: `https://${HOST_BACKEND}:${PORT_BACKEND}${endpoint}`,
-    }
-  }
+export interface Config { 
+  getUrlPath: (endpoint: string) => URLPATH,
+  HOST_BACKEND: string,
+  PORT_BACKEND: string | null,
+}
 
+export const useConfig = (): Config => {
+  
   return {
-    getUrlPath
+    getUrlPath,
+    HOST_BACKEND,
+    PORT_BACKEND
   }  
 }
 
-export default useConfig
+export const getUrlPath = (endpoint: string): URLPATH => {
+    return {
+      BASE_URL: !PORT_BACKEND ? `https://${HOST_BACKEND}${endpoint}` : `https://${HOST_BACKEND}:${PORT_BACKEND}${endpoint}`,
+    }
+}

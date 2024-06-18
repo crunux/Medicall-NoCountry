@@ -2,9 +2,7 @@ import { useAuthStore } from "@/stores/useAuthStore"
 import type { GenericObject } from "vee-validate";
 import { useDateFormat } from '@vueuse/core'
 import router from "@/router";
-import  useConfig  from '../../../utils/useConfig'
-const { getUrlPath } = useConfig
-
+import { getUrlPath }  from '@/utils/useConfig'
 
 const useRegister = () => {
     const store = useAuthStore()

@@ -1,7 +1,6 @@
 import router from "@/router";
 import { useAuthStore } from '@/stores/useAuthStore';
-import  useConfig  from '../../../utils/useConfig'
-const { getUrlPath } = useConfig
+import { getUrlPath }  from '@/utils/useConfig'
 
 const useLogin = () => {
     
