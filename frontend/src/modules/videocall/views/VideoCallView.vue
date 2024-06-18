@@ -1,12 +1,11 @@
 <script setup lang="ts">
-import { ref, computed, reactive, onMounted } from 'vue';
+import { ref, computed } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { useDevicesList, useDisplayMedia } from '@vueuse/core';
 import VideoWebRTCSetup from '../components/VideoWebRTCSetup.vue';
 import DemoExample from '../components/DemoExample.vue';
 const { push } = useRouter();
 const roomId = useRoute().query.roomId as string;
-
 
 const webrtc = ref<InstanceType<typeof VideoWebRTCSetup> | null>(null);
 // const mutedOn = ref(false);

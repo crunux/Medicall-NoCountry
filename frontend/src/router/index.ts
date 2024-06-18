@@ -14,8 +14,30 @@ const router = createRouter({
       }
     },
     {
-      path: '/about',
-      name: 'about',
+      path: '/about_us',
+      name: 'about_us',
+      // route level code-splitting
+      // this generates a separate chunk (About.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import(/* webpackChunkName: "about" */'../views/AboutView.vue'),
+      meta: {
+        requireAuth: false
+      }
+    },
+    {
+      path: '/services',
+      name: 'services',
+      // route level code-splitting
+      // this generates a separate chunk (About.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import(/* webpackChunkName: "about" */'../views/AboutView.vue'),
+      meta: {
+        requireAuth: false
+      }
+    },
+    {
+      path: '/contact',
+      name: 'contact',
       // route level code-splitting
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
@@ -41,7 +63,7 @@ const router = createRouter({
         requireAuth: false
       }
     },
-    // videcall
+    // Video Call
     {
       path: '/videocall',
       name: 'videocall',
@@ -55,6 +77,15 @@ const router = createRouter({
       path: '/medicos',
       name: 'medicos',
       component: () => import(/* webpackChunkName: "medicos" */'../modules/medico/views/MedicosView.vue'),
+      meta: {
+        requireAuth: true
+      }
+    },
+    // Profile
+    {
+      path: '/profile',
+      name: 'profile',
+      component: () => import(/* webpackChunkName: "profile"*/ '../../src/modules/profile/views/ProfileView.vue'),
       meta: {
         requireAuth: true
       }

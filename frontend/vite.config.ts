@@ -23,7 +23,7 @@ export default defineConfig({
         PrimeVueResolver()
       ],
       deep: true,
-      dirs: ['src/components', 'node_modules/primevue/src/components', 'node_modules/primeicons', 'src/layouts', 'node_modules/vee-validate', 'node_modules/@vueuse/core', 'node_modules/@unhead/vue/components'],
+      dirs: ['src/components', 'node_modules/primevue/src/components', 'src/modules', 'src/modules/**/*', 'node_modules/primeicons', 'src/layouts', 'node_modules/vee-validate', 'node_modules/@vueuse/core'],
       dts: true,
       types: [{
         from: 'vue-router',
@@ -48,9 +48,9 @@ export default defineConfig({
         'pinia',
         {
           from: 'vue-router',
-          imports: ['RouteLocationRaw'],
-          type: true,
-        },
+          names: ['useRouter', 'useRoute', 'RouteLocationRaw'],
+          type: true
+        }
       ],
       dirs: ['./src', '@/stores'],
       vueTemplate: true,

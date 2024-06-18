@@ -1,18 +1,14 @@
 import router from "@/router";
 import { useAuthStore } from '@/stores/useAuthStore';
-
-let HOST_BACKEND = import.meta.env.VITE_HOST_BACKEND
-const PORT_BACKEND = import.meta.env.VITE_PORT_BACKEND || null
-
-if (PORT_BACKEND) {
-    HOST_BACKEND = `${HOST_BACKEND}:${PORT_BACKEND}`
-}
+import { getUrlPath }  from '@/utils/useConfig'
 
 const useLogin = () => {
+    
     const store = useAuthStore()
+    const { BASE_URL } = getUrlPath('/api/login')
     const login = async (values: any) => {
         try {
-            const response = await fetch(`https://${HOST_BACKEND}/api/login`, {
+            const response = await fetch(BASE_URL, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -28,17 +24,18 @@ const useLogin = () => {
             }
 
             const data = await response.json();
-            console.log('Respuesta del servidor:', data);
-
             // Guardar el token en el almacenamiento local
             store.setToken(data.accesTocke);
             store.setUser(data.user);
-
-            router.push({ name: 'videocall' });
+            // redirect to videocall
+            router.push({ name: 'profile' });
 
         } catch (error) {
             console.error('Error al iniciar sesión:', error);
             // Aquí puedes manejar el error, como mostrar un mensaje al usuario
+            return {
+                error
+            }
         }
     }
     return {
