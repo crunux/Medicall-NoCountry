@@ -12,5 +12,7 @@ describe('Test Login', () => {
     cy.get('input[type=email]').type('joancruz0502@hotmail.com')
     cy.get('input[type=password]').type('12345678')
     cy.get('button[name=ingresar]').click()
+    cy.url().should('include', '/profile')
+
   })
 })

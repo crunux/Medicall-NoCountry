@@ -8,6 +8,7 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     AdminLayout: typeof import('./src/layouts/AdminLayout.vue')['default']
+    AdminProfileView: typeof import('./src/modules/admin/views/AdminProfileView.vue')['default']
     AdminView: typeof import('./src/modules/admin/views/AdminView.vue')['default']
     AuthLayout: typeof import('./src/layouts/AuthLayout.vue')['default']
     Avatar: typeof import('primevue/avatar')['default']
@@ -22,9 +23,11 @@ declare module 'vue' {
     LoginForm: typeof import('./src/modules/auth/components/LoginForm.vue')['default']
     LoginView: typeof import('./src/modules/auth/views/LoginView.vue')['default']
     MedicosForm: typeof import('./src/modules/auth/components/MedicosForm.vue')['default']
+    MedicosProfileView: typeof import('./src/modules/medico/views/MedicosProfileView.vue')['default']
     MedicosView: typeof import('./src/modules/medico/views/MedicosView.vue')['default']
     Menu: typeof import('primevue/menu')['default']
     MenuProfile: typeof import('./src/components/MenuProfile.vue')['default']
+    PacienteProfileView: typeof import('./src/modules/profile/components/PacienteProfileView.vue')['default']
     PacientesForm: typeof import('./src/modules/auth/components/PacientesForm.vue')['default']
     Password: typeof import('primevue/password')['default']
     ProfileView: typeof import('./src/modules/profile/views/ProfileView.vue')['default']
