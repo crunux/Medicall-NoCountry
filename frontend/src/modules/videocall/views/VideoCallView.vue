@@ -2,14 +2,13 @@
 import { ref, computed, reactive, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { useDevicesList, useDisplayMedia } from '@vueuse/core';
-import VideoWebRTC from '../components/VideoWebRTC.vue';
-import { on } from 'events';
+import VideoWebRTCSetup from '../components/VideoWebRTCSetup.vue';
+import DemoExample from '../components/DemoExample.vue';
 const { push } = useRouter();
-const { roomId: id } = useRoute().query;
+const roomId = useRoute().query.roomId as string;
 
 
-const webrtc = ref<InstanceType<typeof VideoWebRTC> | null>(null);
-const roomId = ref(id);
+const webrtc = ref<InstanceType<typeof VideoWebRTCSetup> | null>(null);
 // const mutedOn = ref(false);
 // const videoOff = ref(false);
 // const preCall = ref<HTMLVideoElement | null>(null);
@@ -56,12 +55,16 @@ const join = () => {
   webrtc.value?.join();
 }
 
-console.log(roomId.value, videoInputs, audioInputs);
+// console.log(roomId, 'roomId', typeof roomId);
 
 const leave = () => {
   webrtc.value?.leave();
   // push({ name: 'home' });
 };
+
+const captureScreen = () => {
+  webrtc.value?.capture();
+}
 
 // watch(selectedCamera, (value: string) => {
 //   contraints.video.deviceId = value;
@@ -120,7 +123,7 @@ watchEffect(() => {
       disabled
       v-model="roomId" />
     <div class="m-2">
-      <VideoWebRTC ref="webrtc"
+      <VideoWebRTCSetup ref="webrtc"
         socketURL="https://api.crunux.tech/"
         cameraHeight="500"
         :roomId
@@ -139,7 +142,12 @@ watchEffect(() => {
         rounded
         @click="leave"
         class="m-2 py-2" />
+      <Button severity="info"
+        @click="captureScreen"
+        :disabled="stateCall === 'disconnected'"
+        label="Capture Screen"
+        rounded
+        class="m-2 py-2" />
     </div>
   </section>
-
 </template>

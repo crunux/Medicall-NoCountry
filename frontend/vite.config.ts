@@ -14,7 +14,7 @@ export default defineConfig({
     vue({
       template: {
         compilerOptions: {
-          isCustomElement: (tag) => ['VideoWebRTCSetup', 'navbar'].includes(tag),
+          isCustomElement: (tag) => ['navbar'].includes(tag),
         }
       }
     }),

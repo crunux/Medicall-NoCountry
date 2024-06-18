@@ -124,6 +124,7 @@ export default defineComponent({
             this.signalClient.once('discover', (discoveryData) => {
                 that.log('discovered', discoveryData)
                 async function connectToPeer(peerID) {
+                    console.log('peerID', peerID, typeof peerID)
                     if (peerID == that.socket.id) return;
                     try {
                         that.log('Connecting to peer', that.roomId);

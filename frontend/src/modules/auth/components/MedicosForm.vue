@@ -139,7 +139,7 @@ const registerUser = handleSubmit(async (values) => {
                                     type="text"
                                     aria-describedby="genero-help"
                                     :class="{ 'p-invalid': errors.genero }"
-                                    autofocus />
+                                     />
                                 <small v-if="errors.genero"
                                     id="genero-help"
                                     class="p-error">
