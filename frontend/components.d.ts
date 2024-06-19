@@ -17,6 +17,7 @@ declare module 'vue' {
     Carousel: typeof import('primevue/carousel')['default']
     Checkbox: typeof import('primevue/checkbox')['default']
     DefaultLayout: typeof import('./src/layouts/DefaultLayout.vue')['default']
+    DemoExample: typeof import('./src/modules/videocall/components/DemoExample.vue')['default']
     Dropdown: typeof import('primevue/dropdown')['default']
     InputNumber: typeof import('primevue/inputnumber')['default']
     InputText: typeof import('primevue/inputtext')['default']
@@ -41,5 +42,6 @@ declare module 'vue' {
     Textarea: typeof import('primevue/textarea')['default']
     VideoCallView: typeof import('./src/modules/videocall/views/VideoCallView.vue')['default']
     VideoWebRTC: typeof import('./src/modules/videocall/components/VideoWebRTC.vue')['default']
+    VideoWebRTCSetup: typeof import('./src/modules/videocall/components/VideoWebRTCSetup.vue')['default']
   }
 }

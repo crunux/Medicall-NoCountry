@@ -42,15 +42,15 @@ export default defineConfig({
       imports: [
         // presets
         'vue',
-        'vue-router',
         '@vueuse/core',
         'vee-validate',
         'pinia',
+        'vue-router',
         {
           from: 'vue-router',
-          names: ['useRouter', 'useRoute', 'RouteLocationRaw'],
-          type: true
-        }
+          imports: ['RouteLocationRaw'],
+          type: true,
+        },
       ],
       dirs: ['./src', '@/stores'],
       vueTemplate: true,

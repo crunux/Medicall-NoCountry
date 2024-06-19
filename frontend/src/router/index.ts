@@ -76,7 +76,7 @@ const router = createRouter({
     {
       path: '/medicos',
       name: 'medicos',
-      component: () => import(/* webpackChunkName: "medicos" */'../modules/medico/views/MedicosView.vue'),
+      component: () => import(/* webpackChunkName: "medicos" */'../modules/medico/views/MedicosProfileView.vue'),
       meta: {
         requireAuth: true
       }
