@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useAuthStore } from '@/stores/useAuthStore';
+import useAuthStore from '@/stores/useAuthStore';
 import { useRoute, useRouter } from 'vue-router';
 
 const store = useAuthStore();
@@ -13,14 +13,19 @@ const activateRegister = computed(() => currentRoute.value.path !== '/register')
 
 const items = ref([
     {
-        label: 'Dashboard',
+        label: 'Profile',
         icon: 'pi pi-fw pi-home',
-        to: '/dashboard'
+        to: '/profile'
     },
     {
         label: 'Logout',
         icon: 'pi pi-sign-out',
-        shortcut: '⌘+Q'
+        shortcut: '⌘+Q',
+        command: () => {
+            console.log('logout');
+
+            // store.logout();
+        }
     },
     {
         separator: true
@@ -36,7 +41,7 @@ const items = ref([
             <RouterLink class="text-lg no-underline"
                 to="/about_us">Quienes Somos?</RouterLink>
             <RouterLink class="text-lg no-underline"
-                to="/servicios">Servicios</RouterLink>
+                to="/services">Servicios</RouterLink>
             <RouterLink class="text-lg no-underline"
                 to="/contact">Contacto</RouterLink>
         </div>
@@ -56,12 +61,13 @@ const items = ref([
                     src="@/assets/images/medicall.png"
                     alt="logo-medicall">
             </div>
-            <div class="pointer px-1"
+            <div class="cursor-pointer hover:border-1 hover:border-primary-500 pr-4"
                 @click="menuProfile?.toggleMenu">
-                <Avatar v-badge.danger="4"
-                    v-if="userLoggedIn"
-                    :image="userLoggedIn.profile_photo_url"
-                    :icon="userLoggedIn.profile_photo_url ? 'pi pi-user' : ''" />
+                <Avatar v-if="userLoggedIn"
+                    shape="circle"
+                    size="large"
+                    class=""
+                    :image="userLoggedIn.profile_photo_url" />
                 <MenuProfile ref="menuProfile"
                     :popup="true"
                     :items

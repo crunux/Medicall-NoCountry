@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { MenuItem, User } from '@/types';
+import { RouterLink } from 'vue-router';
 const el = ref<InstanceType<typeof Menu> | null>(null)
 
 const { user, popup, items } = withDefaults(defineProps<{
@@ -35,9 +36,11 @@ defineExpose({
                 <span class="text-primary font-bold">{{ item.label }}</span>
             </template>
             <template #item="{ item, props }">
-                <a v-ripple
-                    class="inline-flex items-center"
-                    v-bind="props.action">
+                <RouterLink v-ripple
+                    class="inline-flex items-center no-underline p-2"
+                    :to="item.to ? item.to : ''"
+                    v-biding="props.actions"
+                    @click="item.command ? item.command : ''">
                     <span :class="item.icon" />
                     <span class="ml-2">{{ item.label }}</span>
                     <!-- <Badge v-if="item.badge"
@@ -46,7 +49,7 @@ defineExpose({
                     <span v-if="item.shortcut"
                         class="ml-auto border-1 surface-border border-round surface-100 text-xs p-1">{{ item.shortcut
                         }}</span>
-                </a>
+                </RouterLink>
             </template>
             <template #end>
                 <button v-ripple
