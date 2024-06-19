@@ -93,3 +93,7 @@ export interface User {
     type_profile: number;
     profile_photo_url: string;
 }
+
+export interface PacienteUser extends User { }
+export interface MedicoUser extends User { }
+export interface AdminUser extends User { }

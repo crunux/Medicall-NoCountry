@@ -1,32 +1,37 @@
 import { defineStore } from "pinia"
-import { ref } from "vue"
-import type { User } from '@/types';
+import { computed, ref } from "vue"
+import type { PacienteUser, MedicoUser, AdminUser } from '@/types';
 
-interface UserPaciente extends User { }
-interface UserMedico { }
-interface UserAdmin { }
+type User = PacienteUser | MedicoUser | AdminUser
+type OtherUser = PacienteUser | MedicoUser
 
-type UserStore = UserPaciente | UserMedico | UserAdmin
-
-export const useAuthStore = defineStore('auth', () => {
-    const user = ref<UserStore| null>(null)
+const useAuthStore = defineStore('auth', () => {
+    const user = ref<User | null>(null)
     const token = ref<string | null>(null)
-    const otherUser = ref<UserPaciente | UserMedico | null>(null)
+    const otherUser = ref<OtherUser | null>(null)
 
     const setToken = (newToken: string) => {
         token.value = newToken
     }
 
-    const setUser = (newUser: UserStore) => {
+    const setUser = (newUser: User) => {
         user.value = newUser
     }
 
-    const setOtherUser = (newUser: UserPaciente | UserMedico) => {
+    const setOtherUser = (newUser: OtherUser) => {
         otherUser.value = newUser
     }
+
+    const currentUser = computed(() => user.value)
+
+    const currentOtherUser = computed(() => otherUser.value)
+
     return {
         user,
         token,
+        // getters
+        currentUser,
+        currentOtherUser,
         //Actions
         setToken,
         setUser,
@@ -37,3 +42,5 @@ export const useAuthStore = defineStore('auth', () => {
         persist: true,
     },
 )
+
+export default useAuthStore
