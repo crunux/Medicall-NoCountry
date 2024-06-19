@@ -5,6 +5,12 @@ const title = 'Paciente';
 
 useHead({
   title,
+  meta: [
+    {
+      name: 'description',
+      content: 'Paciente'
+    }
+  ]
 });
 </script>
 

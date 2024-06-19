@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import useAuthStore from '@/stores/useAuthStore';
+import { PrimeIcons } from 'primevue/api';
 import { useRoute, useRouter } from 'vue-router';
 
 const store = useAuthStore();
@@ -26,6 +27,11 @@ const items = ref([
 
             // store.logout();
         }
+    },
+    {
+        label: 'Change User',
+        icon: PrimeIcons.COG,
+        shortcut: '⌘+P',
     },
     {
         separator: true

@@ -1,5 +1,5 @@
 import router from "@/router";
-import { useAuthStore } from '@/stores/useAuthStore';
+import useAuthStore from '@/stores/useAuthStore';
 import { getUrlPath }  from '@/utils/useConfig'
 
 const useLogin = () => {
