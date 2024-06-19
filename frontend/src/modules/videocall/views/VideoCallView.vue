@@ -1,15 +1,14 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
-import { useDevicesList, useDisplayMedia } from '@vueuse/core';
-import VideoWebRTCSetup from '../components/VideoWebRTCSetup.vue';
-import DemoExample from '../components/DemoExample.vue';
+import { useDevicesList } from '@vueuse/core';
+import VideoWebRTC from '../components/VideoWebRTC.vue';
 const { push } = useRouter();
 const roomId = useRoute().query.roomId as string;
 
-const webrtc = ref<InstanceType<typeof VideoWebRTCSetup> | null>(null);
-// const mutedOn = ref(false);
-// const videoOff = ref(false);
+const webrtc = ref<InstanceType<typeof VideoWebRTC> | null>(null);
+const mutedOn = ref(true);
+const videoOff = ref(false);
 // const preCall = ref<HTMLVideoElement | null>(null);
 
 const selectedCamera = ref('');
@@ -23,6 +22,9 @@ const {
 } = useDevicesList({
   requestPermissions: true,
 })
+
+// const currentCamera = computed(() => videoInputs.value[0]?.deviceId)
+// const currentMicrophone = computed(() => audioInputs.value[0]?.deviceId)
 
 const listCamera = computed(() => videoInputs.value.map((item) => ({
   label: item.label,
@@ -40,15 +42,6 @@ const listAudioOutpust = computed(() => audioOutputs.value.map((item) => ({
 })));
 
 const stateCall = computed(() => webrtc.value?.status);
-// const contraints = reactive({
-//   video: {
-//     deviceId: selectedCamera.value,
-//   },
-//   audio: {
-//     deviceId: selectedMicrophone.value
-//   }
-// });
-// const { stream, start } = useDisplayMedia(contraints)
 
 const join = () => {
   webrtc.value?.join();
@@ -58,27 +51,31 @@ const join = () => {
 
 const leave = () => {
   webrtc.value?.leave();
-  // push({ name: 'home' });
+  push({ name: 'profile' });
 };
 
 const captureScreen = () => {
   webrtc.value?.capture();
 }
 
-// watch(selectedCamera, (value: string) => {
-//   contraints.video.deviceId = value;
-//   preCall.value?.srcObject = stream.value;
-// });
-// watch(selectedMicrophone, (value: string) => {
-//   contraints.audio.deviceId = value;
-// });
+const sharedScreen = () => {
+  webrtc.value?.shareScreen();
+}
 
-// watch(selectedSpeaker, (value: string) => {
-//   preCall.value?.setSinkId(value);
-// });
+watch(selectedCamera, (value: string) => {
+  contraints.video.deviceId = value;
+});
+
+watch(selectedMicrophone, (value: string) => {
+  contraints.audio.deviceId = value;
+});
+
+watch(selectedSpeaker, (value: string) => {
+  preCall.value?.setSinkId(value);
+});
+
 watchEffect(() => {
   console.log(webrtc.value?.status, 'webrtc');
-
 })
 // watchEffect(() => {
 //   start();
@@ -119,12 +116,17 @@ watchEffect(() => {
       :muted="mutedOn"></video> -->
     <InputText id="roomId-help"
       label="Room ID"
+      class="w-40 text-center"
       disabled
       v-model="roomId" />
     <div class="m-2">
-      <VideoWebRTCSetup ref="webrtc"
+      <VideoWebRTC ref="webrtc"
         socketURL="https://api.crunux.tech/"
         cameraHeight="500"
+        :enableVideo="videoOff"
+        :enableAudio="mutedOn"
+        :videoId="selectedCamera"
+        :audioId="selectedMicrophone"
         :roomId
         :enableLogs="true" />
     </div>
@@ -141,10 +143,26 @@ watchEffect(() => {
         rounded
         @click="leave"
         class="m-2 py-2" />
+      <Button :severity="!mutedOn ? 'primary' : 'danger'"
+        icon="pi pi-microphone"
+        rounded
+        @click="mutedOn = !mutedOn"
+        class="m-2 py-2" />
+      <Button :severity="videoOff ? 'primary' : 'danger'"
+        icon="pi pi-camera"
+        rounded
+        @click="videoOff = !videoOff"
+        class="m-2 py-2" />
+      <Button severity="info"
+        @click="sharedScreen"
+        :disabled="stateCall === 'disconnected'"
+        icon="pi pi-desktop"
+        rounded
+        class="m-2 py-2" />
       <Button severity="info"
         @click="captureScreen"
         :disabled="stateCall === 'disconnected'"
-        label="Capture Screen"
+        icon="pi pi-image"
         rounded
         class="m-2 py-2" />
     </div>
