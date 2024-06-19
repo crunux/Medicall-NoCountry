@@ -85,7 +85,7 @@ const router = createRouter({
     {
       path: '/profile',
       name: 'profile',
-      component: () => import(/* webpackChunkName: "profile"*/ '../../src/modules/profile/views/ProfileView.vue'),
+      component: () => import(/* webpackChunkName: "profile"*/ '../modules/profile/views/ProfileView.vue'),
       meta: {
         requireAuth: true
       }
@@ -97,7 +97,9 @@ router.beforeEach((to, from, next) => {
   const auth = useAuthStore()
   const isAuth = auth.token || localStorage.getItem('accessToken');
   if ((to.meta.requireAuth) && (!isAuth)) {
-    next('login')
+    next({
+      name: 'login'
+    })
   } else {
     next()
   }
